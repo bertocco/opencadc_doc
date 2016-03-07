@@ -1,0 +1,225 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "AC_UsersGuide.ent">
+%BOOK_ENTITIES;
+]>
+<chapter id="chap-Documentation-AC_UsersGuide-tomcatInstall">
+    <title>Tomcat Web Server Installation</title>
+<para>
+This chapter explains hot to configure tomcat web server to support ssl, proxies and opencadc name-password login. The guide is mainly based on two different installation guides and on cadcTomcat documentation:	
+</para>
+<para>
+This chapter is mainly based on two different installation guides and on opencadc github.
+</para>
+<para>Reference documentation:</para>
+<para>
+    <ulink url="https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-centos-7">How To Install Apache Tomcat 8 on CentOS 7</ulink>
+</para>
+<para>
+    <ulink url="https://panovski.me/install-tomcat-8-on-centos-7">Install Tomcat 8 on CentOS 7</ulink>
+</para>
+<para>
+    <ulink url="https://github.com/opencadc/ac/tree/master/cadcTomcat">cadcTomcat documentation</ulink>
+</para>
+
+
+<section id="sect-Documentation-AC_UsersGuide-tomcatInstall_Section_1">
+    <title>Tomcat Download and Install</title>
+
+  <itemizedlist>
+    <listitem><para>Install java</para>
+<screen>
+yum install java-1.7.0-openjdk-devel
+</screen>
+    </listitem>
+  </itemizedlist>
+<para>
+Find the latest version of Tomcat 8 at the <ulink url="http://tomcat.apache.org/download-80.cgi">Tomcat 8 Downloads page</ulink> and let's download the latest binary distribution. You can do it using wget and paste in the link to download the Tomcat 8 archive, like this (your mirror link will probably differ from the example):
+</para>
+  <itemizedlist>
+    <listitem>
+<screen>
+wget http://mirrors.muzzy.it/apache/tomcat/tomcat-8/v8.0.32/bin/apache-tomcat-8.0.32.tar.gz
+</screen>
+    </listitem>
+  </itemizedlist>
+<para>
+Create the future tomcat home directory and uncompress there the newly downloaded package.
+</para>
+  <itemizedlist>
+    <listitem>
+<screen>
+mkdir -p /opt/tomcat
+tar xvf apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1
+</screen>
+    </listitem>
+  </itemizedlist>
+
+</section>
+
+<section id="sect-Documentation-AC_UsersGuide-tomcatInstall_Section_2">
+
+    <title>Run tomcat as tomcat user</title>
+
+<para>Create the tomcat group:</para>
+<screen>
+groupadd tomcat
+</screen>
+
+<para>Create tomcat user making this user a member of the tomcat group, with a home directory of /opt/tomcat (where we already installed Tomcat), and with a 
+shell of /bin/false (so nobody can log into the tomcat account):</para>
+<screen>
+sudo useradd -M -s /bin/nologin -g tomcat -d /opt/tomcat tomcat
+</screen>
+<para>Update permissions:</para>
+<para>   --Selectively</para>
+<screen>
+cd /opt/tomcat
+sudo chgrp -R tomcat conf
+sudo chmod g+rwx conf
+sudo chmod g+r conf/*
+
+chown -R tomcat webapps/ work/ temp/ logs/
+</screen>
+<para>  --Unselectively and Faster:</para>
+<screen>
+chown tomcat: /opt/tomcat -R 
+</screen>
+
+</section>
+
+
+<section id="sect-Documentation-AC_UsersGuide-tomcatInstall_Section_3">
+    <title>Install Systemd Unit File</title>
+
+<para>
+Create the file below:
+</para>
+<screen>
+cat /etc/systemd/system/tomcat.service
+
+# Systemd unit file for tomcat
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/jre
+Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/bin/kill -15 $MAINPID
+
+User=tomcat
+Group=tomcat
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+</screen>
+
+<para>Adjust permissions:</para>
+<screen>
+chown tomcat: /usr/lib/systemd/system/tomcatJSVC.service
+</screen>
+
+<para>Reload Systemd to load the Tomcat unit file:</para>
+<screen>
+systemctl daemon-reload
+</screen>
+
+<para>Enable the Tomcat service, so it starts on server boot:</para>
+<screen>
+systemctl enable tomcat
+</screen>
+
+</section>
+
+<section id="sect-Documentation-AC_UsersGuide-tomcatInstall_Section_4">
+    <title>Start tomcat web server as tomcat user on port 80 or 443 using JSVC</title>
+
+<para>Build Jsvc using java 1.8.0, install jsvc executable and assign suitable permissions:</para>
+<screen>
+cd /opt/tomcat/bin  
+tar xvfz commons-daemon-native.tar.gz  
+cd commons-daemon-*-native-src/unix  
+./configure --with-java=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.71-2.b15.el7_2.x86_64
+make  
+cp jsvc ../..  
+cd ../..
+chown tomcat: commons-daemon-1.0.15-native-src -R
+chown tomcat: jsvc
+</screen>
+
+<para>Create a systemd service using jsvc to start tomcat</para>
+<screen>
+cat /usr/lib/systemd/system/tomcatJSVC.service
+
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/tomcat.pid
+Environment=CATALINA_PID=/var/run/tomcat.pid
+Environment=JAVA_HOME=/usr/java/default
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+Environment=CATALINA_OPTS=
+
+ExecStart=/opt/tomcat/bin/jsvc \
+            -Dcatalina.home=${CATALINA_HOME} \
+            -Dcatalina.base=${CATALINA_BASE} \
+            -cp ${CATALINA_HOME}/bin/commons-daemon.jar:${CATALINA_HOME}/bin/bootstrap.jar:${CATALINA_HOME}/bin/tomcat-juli.jar \
+            -user tomcat \
+            -java-home ${JAVA_HOME} \
+            -pidfile /var/run/tomcat.pid \
+            -errfile SYSLOG \
+            -outfile SYSLOG \
+            $CATALINA_OPTS \
+            org.apache.catalina.startup.Bootstrap
+
+ExecStop=/opt/tomcat/bin/jsvc \
+            -pidfile /var/run/tomcat.pid \
+            -stop \
+            org.apache.catalina.startup.Bootstrap
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+</screen>
+
+<para>Adjust permissions:</para>
+<screen>
+chown tomcat: /usr/lib/systemd/system/tomcatJSVC.service
+</screen>
+
+<para>Reload Systemd to load the Tomcat unit file</para>
+<screen>
+systemctl daemon-reload
+</screen>
+
+<para>Enable the Tomcat service, so it starts on server boot</para>
+<screen>
+systemctl enable tomcatJSVC
+</screen>
+
+<para>Open port 8080 in the firewall</para>
+<screen>
+firewall-cmd --zone=public --add-port=8080/tcp --permanent  
+firewall-cmd --reload  
+</screen>
+
+</section>
+
+</chapter>
+

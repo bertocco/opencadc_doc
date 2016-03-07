@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "AC_UsersGuide.ent">
+%BOOK_ENTITIES;
+]>
+<chapter id="chap-Documentation-AC_UsersGuide-AccessControlCmdLineUsage_Chapter">
+<title>Access Control Utilities Usage</title>
+
+<para>
+After the correct deployment and configuration, the system is ready to be used to manage users and groups.
+</para>
+<section id="sect-Documentation-AC_UsersGuide-Test_Chapter-AccessControlCmdLineUsage_Section_1">
+<title>New user registration</title>
+<para>
+
+</para>
+
+</section>
+
+	
+</chapter>
+

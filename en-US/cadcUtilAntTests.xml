@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "AC_UsersGuide.ent">
+%BOOK_ENTITIES;
+]>
+<chapter id="chap-Documentation-AC_UsersGuide-cadcUtilAntTests_Chapter">
+	<title>cadcUtil Tests</title>
+	<para>
+		This chapter explains how to use cadc utilities tests just to check if basic utilities are well working. 
+	</para>
+	<section id="sect-Documentation-AC_UsersGuide-Test_Chapter-cadcUtilAntTests_Section_1">
+		<title><command>ant test</command> usage</title>
+		<para>
+			To run <command>ant test</command> it is needed a proxy file in <command>${CADC_PREFIX}/etc/proxy.pem</command>. This proxy file can be created starting from the user identity certificate (released by a Certification Authority) in <command>.pem</command> format or staring from <command>user_cert.pem</command> and <command>user_key.pem</command> files joined in one unique file doing:
+<screen>
+cat mykey.pem mycert.pem >> mycert_and_key.pem
+</screen> 
+At this point, the proxy.pem file can be generated issuing:
+<screen>
+${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/mycert_and_key.pem &lt;days of validity number&gt; ${CADC_PREFIX}/etc
+</screen>
+Now ant tests can be run:
+<screen>
+cd ${CADC_PREFIX}/cadcUtil
+ant test
+</screen>
+		</para>
+	</section>
+	
+</chapter>
+

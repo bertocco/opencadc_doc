@@ -1,0 +1,273 @@
+<chapter id="CADC_AC_Users_Guide-accessControlConfiguration_Chapter">
+<title>Access Control utilities configuration</title>
+<para>This paragraph explains how to configure the system to operate Access Control utilities and services.</para>
+
+<section id="CADC_AC_Users_Guide-accessControlConfiguration_Chapter_Section_1">
+<title>Configuration files involved</title>
+
+<para>
+Before to use the Access Control utilities and services, the system must be configured conveniently filling some configuration and putting them in the expected location. Involved files and respective locations are described below.
+<orderedlist>
+ <listitem>
+  <para>
+   <screen>~/.dbrc file</screen>
+This file must be located in the home directory of the user lunching the tests or using the software. A template of this file is the following:
+   <screen>
+#server proxyuser proxyUserDN password driver serverURL
+#&lt;server hostname&gt; &lt;proxyUser in LdapConfig.properties&gt; &lt;proxyUserLdapDN&gt; &lt;password&gt; N/A N/A
+   </screen>
+More than one user can be configured in this file as shown in the subsequent example:
+   <screen>
+devLdap uid=webproxy,ou=SpecialUsers,cd=inaf,dc=oats,dc=it uid=webproxy,ou=SpecialUsers,cd=inaf,dc=oats,dc=it peperone N/A N/A
+devLdap uid=testproxy,ou=SpecialUsers,dc=testcanfar uid=testproxy,ou=SpecialUsers,dc=testcanfar peperone N/A N/A
+   </screen>
+  </para>
+ </listitem>
+ <listitem>
+<para>
+ <screen>~/config/LdapConfig.properties</screen>
+ A template of this file can be found in:
+ <screen>${CADC_PREFIX}/../ac/cadcAccessControl-Server/LdapConfig.properties</screen>
+</para>
+ <warning><para>
+Care must be taken in configuring the same server host and proxyuser in both <command>~/.dbrc</command> and <command>~/config/LdapConfig.properties</command>
+      </para>
+ </warning> 
+ <note><para>
+Other copies of similar files are present in the girhub repository. Not all these files have to be configured. The files:
+ <screen>
+${CADC_PREFIX}/../ac/cadcAccessControl-Server/test/config/testConfig1.properties
+${CADC_PREFIX}/../ac/cadcAccessControl-Server/test/config/testConfig2.properties
+ </screen>
+must not be modified because they are used by the test system as they are.
+</para>
+ </note>
+  </listitem>
+  <listitem>
+   <para>
+<screen>~/config/ac-admin-email.properties</screen>
+Contains the configuration of a mail server to be used to send a confirmation e-mail to users after registration.
+A template of this file can be found in:
+<screen>${CADC_PREFIX}.././ac/cadcAccessControl-Admin/config/ac-admin-email.properties</screen>
+   </para>
+  </listitem>
+ </orderedlist>
+</para>
+
+</section>
+
+
+<section id="CADC_AC_Users_Guide-_accessControlConfigurationChapter_Section_2">
+<title>cadcAccessControl-Server services deployment</title>
+<para>
+cadcAccessControl-Server is built from a set of web servlets that must suitably deployed on a web server. The reference web service in this guide is apache-tomcat.
+</para>
+<para>
+Usually a .war file id built and install to deploy a web application. At present (at the time this guide is written), the software repository does not contain scripts or procedures to build a .war file, so we can go through two ways:
+</para>
+<para>
+ <itemizedlist>
+  <listitem>
+   <para>
+to import the cadcAccessControl-Server module in an ide (NetBeans or Eclipse for example) and use the ide facility to build the .war file
+   </para>
+  </listitem>
+  <listitem>
+   <para>
+to manually deploy 
+   </para>
+  </listitem>
+ </itemizedlist>  
+</para>
+<para>
+In both cases a deployment descriptor file (web.xml) is needed. An example of a minimal web.xml file is below:
+</para>
+<para>
+<screen>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+  version="3.1"
+  metadata-complete="true"&gt;
+
+    &lt;description&gt;
+      Access Control Servlets
+    &lt;/description&gt;
+    &lt;display-name&gt;Access Control Servlets&lt;/display-name&gt;
+
+    &lt;welcome-file-list&gt;
+        &lt;welcome-file&gt;index.html&lt;/welcome-file&gt;
+        &lt;welcome-file&gt;index.xhtml&lt;/welcome-file&gt;
+        &lt;welcome-file&gt;index.htm&lt;/welcome-file&gt;
+        &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+    &lt;/welcome-file-list&gt;
+
+    &lt;!-- Define AccessControl-Server servlets --&gt;
+
+    &lt;!-- User Servlet --&gt;
+
+    &lt;servlet&gt;
+      &lt;servlet-name&gt;UserServlet&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;ca.nrc.cadc.ac.server.web.UserServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+          &lt;param-name&gt;ca.nrc.cadc.ac.server.web.UserServlet.NotAugmentedX500Principals&lt;/param-name&gt;
+          &lt;param-value&gt;cn=servops_4a2,ou=cadc,o=hia,c=ca cn=canfarops_586,ou=cadc,o=hia,c=ca&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+          &lt;param-name&gt;ca.nrc.cadc.ac.server.web.UserServlet.NotAugmentedHttpPrincipals&lt;/param-name&gt;
+          &lt;param-value&gt;servops canfarops&lt;/param-value&gt;
+        &lt;/init-param&gt;
+      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;UserServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/users&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;!-- Group Servlet --&gt;
+
+    &lt;servlet&gt;
+      &lt;servlet-name&gt;GroupServlet&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;ca.nrc.cadc.ac.server.web.GroupServlet&lt;/servlet-class&gt;
+      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;GroupServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/groups&lt;/url-pattern&gt;
+     &lt;/servlet-mapping&gt;
+
+    &lt;!-- Login Servlet --&gt;
+
+     &lt;servlet&gt;
+        &lt;servlet-name&gt;LoginServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;ca.nrc.cadc.ac.server.web.LoginServlet&lt;/servlet-class&gt;
+        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+     &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;LoginServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/login&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;!-- Password Servlet --&gt;
+
+   &lt;servlet&gt;
+      &lt;servlet-name&gt;PasswordServlet&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;ca.nrc.cadc.ac.server.web.PasswordServlet&lt;/servlet-class&gt;
+      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+   &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;PasswordServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/pass&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;!-- WhoAmI Servlet --&gt;
+
+   &lt;servlet&gt;
+      &lt;servlet-name&gt;WhoAmIServlet&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;ca.nrc.cadc.ac.server.web.LoginServlet&lt;/servlet-class&gt;
+      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+   &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;WhoAmIServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/whoami&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+     &lt;servlet&gt;
+        &lt;servlet-name&gt;logControl&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;ca.nrc.cadc.log.LogControlServlet&lt;/servlet-class&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;logLevel&lt;/param-name&gt;
+            &lt;param-value&gt;info&lt;/param-value&gt;
+        &lt;/init-param&gt;
+        &lt;init-param&gt;
+            &lt;param-name&gt;logLevelPackages&lt;/param-name&gt;
+            &lt;param-value&gt;
+                ca.nrc.cadc.conformance
+            &lt;/param-value&gt;
+        &lt;/init-param&gt;
+      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+    &lt;/servlet&gt;
+
+
+    &lt;!-- The LOG servlet --&gt;
+    &lt;servlet&gt;
+        &lt;load-on-startup&gt;2&lt;/load-on-startup&gt;
+        &lt;servlet-name&gt;TestServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;ca.nrc.cadc.conformance.server.TestServlet&lt;/servlet-class&gt;
+
+       &lt;init-param&gt;
+           &lt;param-name&gt;logAccessGroup&lt;/param-name&gt;
+           &lt;param-value&gt;CADC&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+           &lt;param-name&gt;groupAuthorizer&lt;/param-name&gt;
+           &lt;param-value&gt;ca.nrc.cadc.auth.CADCGroupAuthorizer&lt;/param-value&gt;
+       &lt;/init-param&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;TestServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;*&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;logControl&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/logControl&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+
+&lt;/web-app&gt;
+</screen>
+</para>
+<para>
+In this guide only manual deployment is described. Posed the following ipothesis:
+</para>
+<para>
+<itemizedlist>
+ <listitem>
+  <para>
+application context name is "ac" 
+  </para>
+ </listitem>
+ <listitem>
+  <para>
+web.xml file has the content displayed above
+  </para> 
+ </listitem>
+ <listitem>
+  <para>
+ext.lib, ext.dev, build variables have the value set in ${CADC_PROPERTIES}/etc/opencadc.properties file
+  </para> 
+ </listitem>
+</itemizedlist>
+</para>
+<para>
+The sequence of operations to perform to manually deploy the AccessControl-Server is below:
+<screen>
+# Deployment tree creation
+mkdir ${TOMCAT_HOME}/webapps/ac/
+mkdir ${TOMCAT_HOME}/webapps/ac/WEB-INF
+mkdir ${TOMCAT_HOME}/webapps/ac/WEB-INF/lib
+
+# Deployment file descriptor creation
+cp example.web.xml ${TOMCAT_HOME}/webapps/ac/WEB-INF/web.xml
+
+# Libraries deployment
+cp ${ext.lib}/*.jar ${TOMCAT_HOME}/webapps/ac/WEB-INF/lib
+cp ${ext.dev}/*.jar ${TOMCAT_HOME}/webapps/ac/WEB-INF/lib
+cp ${build}/lib/*.jar ${TOMCAT_HOME}/webapps/ac/WEB-INF/lib
+
+# At the end restart tomcat and check catalina.out for results
+</screen>
+</para>
+
+</section>
+
+</chapter>

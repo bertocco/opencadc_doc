@@ -1,0 +1,4 @@
+<!ENTITY PRODUCT "Documentation">
+<!ENTITY BOOKID "ACUsersGuide">
+<!ENTITY YEAR "2016">
+<!ENTITY HOLDER "| You need to change the HOLDER entity in the en-US/AC_UsersGuide.ent file |">

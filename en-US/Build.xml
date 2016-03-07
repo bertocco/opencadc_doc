@@ -1,0 +1,52 @@
+<chapter id="CADC_AC_Users_Guide-Compilation_Chapter">
+<title>Compilation Instructions</title>
+<para>The provided compilation system is ant. Default compilation rules are in core/config/opencadc.properties. </para>
+<section id="CADC_AC_Users_Guide-Compilation_Chapter_Section_1">
+<title>Build configuration</title>
+<para>To compile it is needed to download </para>
+<orderedlist>
+<listitem>
+<para>Download the core component:
+<screen>
+git clone https://github.com/opencadc/core
+</screen>
+</para>
+</listitem>
+<listitem>
+<para>
+Go to <command>core/etc/opencadc.properties</command> and customize the content
+</para>
+</listitem>
+<listitem>
+<para>
+Download the external dependencies and put them in the directory configured as <command>ext.lib</command> in <command>core/etc/opencadc.properties</command>
+</para>
+</listitem>
+<listitem>
+<para>
+<screen>
+Build internal dependencies:
+core/cadcUtil
+core/cadcLog
+uws/cadcUWS
+uws/cadcUWS-Server
+reg/cadcRegistry
+</screen>
+</para>
+</listitem>
+<listitem>
+<para>
+<screen>
+Build ac modules in the right order:
+ac/cadcAccessControl
+ac/cadcAccessControl-Server
+ac/cadcAccessControl-Admin
+ac/cadcTomcat
+</screen>
+</para>
+</listitem>
+</orderedlist>
+
+</section>
+
+</chapter>

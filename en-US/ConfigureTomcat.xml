@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "AC_UsersGuide.ent">
+%BOOK_ENTITIES;
+]>
+
+
+
+<chapter id="chap-Documentation-AC_UsersGuide-tomcatConfigure">
+    <title>Tomcat Web Server Configuration</title>
+
+<para>
+This chapter explains hot to configure tomcat web server to support SSL using APR (Apache Portable Runtime) native support, proxies and opencadc name-password login. 
+</para>
+
+<section id="sect-Documentation-AC_UsersGuide-tomcatConfigure_Section_1">
+    <title>Install and configure APR and SSL support</title>
+
+<para>
+* Install apr native support
+</para>
+<screen>
+yum install openssl-devel
+yum install tomcat-native
+</screen>
+
+<para>
+Create a default keystore using your server certificates released by a third party Certification Authority:
+</para>
+<screen>
+cat myCAServerIntermediateCert.pem myCARootCert.pem &gt; CAfile.pem
+openssl pkcs12 -export -in my-server-cert.pem -inkey my-server-cert.key -out server.p12 -name tomcat -CAfile CAfile.pem -caname root
+Enter Export Password: [changeit]
+Verifying - Enter Export Password: [changeit]
+keytool -importkeystore -deststorepass changeit -destkeypass changeit  -destkeystore myserver-keystore -srckeystore server.p12 -srcstoretype PKCS12 -srcstorepass changeit -alias tomcat
+cp myserver-keystore.ks ~/.keystore
+
+where the home is the home of the user running tomcat.
+</screen>
+<para>
+Create the ca-bundle adding my certs. If present, intermediate certificates must be added. As an example, we suppose to have an intermediate CA cert for Personal use different from the CA intermediate cert for server use, so both must be added to the ca-bundle:
+</para>
+<screen>
+mkdir -p /opt/tomcat/conf/tls
+cp /etc/pki/tls/certs/ca-bundle.crt /opt/tomcat/conf/tls/tomcat-ca-bundle.crt
+cat DigiCertCA-intermediate-personal.crt &gt;&gt; /opt/tomcat/conf/tls/tomcat-ca-bundle.crt
+</screen>
+<para>
+Tomcat and system default ca bundles must be aligned for both native (ca-bundle) and java (cacerts) applications.
+</para>
+<para>
+Modify the system ca-bundle following the subsequent info:
+</para>
+<screen>
+cat /etc/pki/ca-trust/extracted/pem/README 
+This directory /etc/pki/ca-trust/extracted/pem/ contains 
+CA certificate bundle files which are automatically created
+based on the information found in the
+/usr/share/pki/ca-trust-source/ and /etc/pki/ca-trust/source/
+directories.
+
+All files are in the BEGIN/END CERTIFICATE file format, 
+as decribed in the x509(1) manual page.
+
+Distrust information cannot be represented in this file format,
+and distrusted certificates are missing from these files.
+
+If your application isn't able to load the PKCS#11 module p11-kit-trust.so,
+then you can use these files in your application to load a list of global
+root CA certificates.
+
+Please never manually edit the files stored in this directory,
+because your changes will be lost and the files automatically overwritten,
+each time the update-ca-trust command gets executed.
+
+Please refer to the update-ca-trust(8) manual page for additional information.
+</screen>
+<para>Steps to perform in our example:</para>
+<screen>
+cp DigiCertCA-intermediate-personal.crt /usr/share/pki/ca-trust-source/
+update-ca-trust
+</screen>
+<para>Align tuststore for java apps:</para>
+<screen>
+keytool -keystore /etc/pki/ca-trust/extracted/java/cacerts  -importcert -alias DigicertUser  -file DigiCertCA-intermediate-personal.crt
+keytool -keystore /etc/pki/ca-trust/extracted/java/cacerts  -importcert -alias DigicertServer  -file myCAServerIntermediateCert.pem 
+keytool -keystore /etc/pki/ca-trust/extracted/java/cacerts  -importcert -alias DigicertTrustedRoot  -file /media/sf_bertocco/Documents/certs/marmolada_oats_inaf_it_816756/TrustedRoot.pem 
+</screen>
+<para>Install server certs:</para>
+<screen>
+cp my-server-cert.pem /opt/tomcat/conf/tls/
+cp my-server-cert.key /opt/tomcat/conf/tls/
+</screen>
+<para>Install the CA file:</para>
+<screen>
+cat myCAServerIntermediateCert.pem myCARootCert.pem &gt; CAfile.pem
+cp CAfile.pem /opt/tomcat/conf/tls/CA.pem
+</screen>
+<para>
+Configure the tomcat connector in <command>${TOMCAT_HOME}/conf/server.xml</command>
+</para>
+<screen>
+&lt;Connector port="80" protocol="HTTP/1.1"
+                 connectionTimeout="20000"
+                 redirectPort="443" /&gt;
+
+&lt;Connector port="443" protocol="org.apache.coyote.http11.Http11AprProtocol"
+          maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+          SSLCertificateFile="/opt/tomcat/conf/tls/marmolada_oats_inaf_it.pem"
+          SSLCertificateKeyFile="/opt/tomcat/conf/tls/marmolada_oats_inaf_it.key"
+          SSLCertificateChainFile="/opt/tomcat/conf/tls/CA.pem"
+          SSLCACertificateFile="/opt/tomcat/conf/tls/tomcat-ca-bundle.crt"
+          SSLVerifyClient="require" SSLVerifyDepth="10"
+          SSLProtocol="ALL"
+         /&gt;
+</screen>
+<para>
+And in <command>${TOMCAT_HOME}/conf/server.xml</command> it must be:
+</para>
+<screen>
+&lt;Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" /&gt;
+</screen>
+
+</section>
+
+
+<section id="sect-Documentation-AC_UsersGuide-tomcatConfigure_Section_2">
+    <title>Enable SSL debug</title>
+<para>
+To enable the SSL debug output in catalina.out, set
+</para>
+<screen>
+JAVA_OPTS="$JAVA_OPTS -Djavax.net.debug=ssl -Djava.net.debug=record,keygen,handshake"
+</screen>
+<para>in <command>${TOMCAT_HOME/conf/catalina.sh</command>
+</para>
+</section>
+
+
+<section id="sect-Documentation-AC_UsersGuide-tomcatConfigure_Section_3">
+    <title>Enable proxy usage in tomcat</title>
+<para>
+To enable the proxy support in tomcat, it must be defined an environment variable OPENSSL_ALLOW_PROXY_CERTS and set it equals to 1. This can be achieved adding 
+</para>
+<screen>
+export OPENSSL_ALLOW_PROXY_CERTS=1
+</screen>
+<para>
+at the beginning of <command>${TOMCAT_HOME}/conf/catalina.sh</command> or, better, in the systemd service script.
+</para>
+
+</section>
+
+<section id="sect-Documentation-AC_UsersGuide-tomcatConfigure_Section_4">
+    <title>Enable login-password authentication cadc software specific</title>
+
+<para>
+The login-password authentication in the cadc software is provided through a plugin. The authentication mechanism will call the access control web service (in module cadcAccessControl-Server) to see if the credentials are correct.
+</para>
+<para>
+To use this plugin, compile it compiling the <command>ac/cadcTomcat</command> module, install it in your tomcat installation:
+</para>
+<screen>
+cp cadcTomcat.jar ${TOMCAT_HOME}/lib
+</screen>
+<para>
+add the following line to the element (within the element) in the tomcat 7 <command>${TOMCAT_HOME}/conf/server.xml</command> file:
+</para>
+<screen>
+&lt;Realm className="ca.nrc.cadc.tomcat.CadcBasicAuthenticator" /&gt;
+</screen>
+
+</section>
+
+</chapter>
+

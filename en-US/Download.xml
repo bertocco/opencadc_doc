@@ -1,0 +1,129 @@
+<chapter id="CADC_AC_Users_Guide-Download_Chapter">
+<title>The Software Repository</title>
+<para>The opencadc software is available on a github repository: 
+<screen>
+https://github.com/opencadc
+</screen>
+The opencadc github repository contains a set of software components and libraries:
+<orderedlist>
+<listitem>
+<para><menuchoice><guimenu>ac</guimenu></menuchoice> : client and server implementations for user and group management</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>apps</guimenu></menuchoice> : client applications</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>tap</guimenu></menuchoice> : client and server implementation of Table Access Protocol (TAP) specification</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>sia</guimenu></menuchoice> : client and server implementations of Simple Image Access (SIA) specification</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>core</guimenu></menuchoice> : core libraries used by modules in other OpenCADC repositories</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>vos</guimenu></menuchoice> : client and server implementations of VOSpace specification</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>uws</guimenu></menuchoice> : client and server implementations of the Universal Worker Service (UWS) specification</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>cdp</guimenu></menuchoice> : client and server implementation of Credential Delegation Protocol (CDP) specification</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>dal</guimenu></menuchoice> : common libraries for IVOA Data Access Layer (DAL) services</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>reg</guimenu></menuchoice> : client and server implementation of IVOA Registry specifications</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>web</guimenu></menuchoice> : client components for the web (html5 and javascript)</para>
+</listitem>
+<listitem>
+<para><menuchoice><guimenu>wcs</guimenu></menuchoice> : Java + JNI wrapper for wcslib</para>
+</listitem>
+</orderedlist>
+A copy of the each component can be obtained by:
+<screen>
+git clone https://github.com/opencadc/&lt;component_name&gt;
+</screen>
+or downloaded as .zip file by the github web interface
+<mediaobject>
+<imageobject>
+  <imagedata fileref="./images/download_from_git.jpg" />
+</imageobject>
+</mediaobject>
+</para>
+
+
+
+<section id="CADC_AC_Users_Guide-Download_Chapter_Section_1">
+<title>Download and build Access Control module from github</title>
+<para>It is suggested to create a work directory and moving on it, i.e. 
+<screen>
+mkdir opencadc
+cd opencadc
+</screen>
+A copy of each opencadc software module can be downloaded from github issuing:
+<screen>
+git clone https://github.com/opencadc/&lt;module_name&gt;
+</screen>
+</para>
+<para>
+By example, the AccessControl module can be obtained issuing:
+<screen>
+git clone https://github.com/opencadc/ac
+</screen>
+</para>
+<para>The internal dependencies needed to build each software component can be extratcted by <command>&lt;component_name&gt;/&lt;sub_module&gt;/build.xml</command> file. 
+</para>
+
+<orderedlist>
+<listitem><para> 
+Internal dependencies:
+
+<informaltable frame="all">
+<tgroup cols="2">
+<thead><row><entry>Internal dependencies of cadcAccessControl-Server</entry></row></thead>
+<tbody>
+    <row><entry>cadcRegistry.jar</entry><entry>https://github.com/opencadc/reg/cadcRegistry</entry></row>
+    <row><entry>cadcUtil.jar</entry><entry>https://github.com/opencadc/core/cadcUtil</entry></row>
+    <row><entry>cadcLog.jar</entry><entry>https://github.com/opencadc/core/cadcLog</entry></row>
+    <row><entry>cadcUWS.jar</entry><entry>https://github.com/opencadc/uws/cadcUWS</entry></row>
+    <row><entry>cadcUWS-Server.jar</entry><entry>https://github.com/opencadc/uws/cadcUWS-Server</entry></row>
+    <row><entry>cadcAccessControl.jar</entry><entry>https://github.com/opencadc/ca/cadcAccessControl</entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+</listitem>
+
+<listitem>
+<para>
+External dependencies:
+<informaltable frame="all">
+<tgroup cols="2">
+<thead><row><entry>External dependencies of cadcAccessControl-Server</entry></row></thead>
+<tbody>
+    <row><entry>junit.jar</entry><entry>http://</entry></row>
+    <row><entry></entry><entry>http://</entry></row>
+    <row><entry>asm.jar</entry><entry>http://</entry></row>
+    <row><entry>cglib.jar</entry><entry>http://</entry></row>
+    <row><entry>easymock.jar</entry><entry>http://</entry></row>
+    <row><entry>objenesis.jar</entry><entry>http://</entry></row>
+    <row><entry>jsonassert.jar</entry><entry>http://</entry></row>
+    <row><entry>mail.jar</entry><entry>http://</entry></row>
+    <row><entry>xerces.jar</entry><entry>http://</entry></row>
+    <row><entry>commons-logging.jar</entry><entry>http://</entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+</listitem>
+
+</orderedlist>
+</section>
+
+</chapter>
