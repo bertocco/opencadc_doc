@@ -1,0 +1,290 @@
+# 
+# AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0\n"
+"POT-Creation-Date: 2016-03-04 12:35+0100\n"
+"PO-Revision-Date: 2016-03-04 12:35+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: None\n"
+"MIME-Version: 1.0\n"
+"Content-Type: application/x-publican; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Tag: title
+#, no-c-format
+msgid "The Software Repository"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "The opencadc software is available on a github repository:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"https://github.com/opencadc\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "The opencadc github repository contains a set of software components and libraries:"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>ac</guimenu></menuchoice> : client and server implementations for user and group management"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>apps</guimenu></menuchoice> : client applications"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>tap</guimenu></menuchoice> : client and server implementation of Table Access Protocol (TAP) specification"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>sia</guimenu></menuchoice> : client and server implementations of Simple Image Access (SIA) specification"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>core</guimenu></menuchoice> : core libraries used by modules in other OpenCADC repositories"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>vos</guimenu></menuchoice> : client and server implementations of VOSpace specification"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>uws</guimenu></menuchoice> : client and server implementations of the Universal Worker Service (UWS) specification"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>cdp</guimenu></menuchoice> : client and server implementation of Credential Delegation Protocol (CDP) specification"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>dal</guimenu></menuchoice> : common libraries for IVOA Data Access Layer (DAL) services"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>reg</guimenu></menuchoice> : client and server implementation of IVOA Registry specifications"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>web</guimenu></menuchoice> : client components for the web (html5 and javascript)"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<menuchoice><guimenu>wcs</guimenu></menuchoice> : Java + JNI wrapper for wcslib"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "A copy of the each component can be obtained by:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"git clone https://github.com/opencadc/&lt;component_name&gt;\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "or downloaded as .zip file by the github web interface <mediaobject> <imageobject> <imagedata fileref=\"./images/download_from_git.jpg\" /> </imageobject> </mediaobject>"
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Download and build Access Control module from github"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "It is suggested to create a work directory and moving on it, i.e."
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"mkdir opencadc\n"
+"cd opencadc\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "A copy of each opencadc software module can be downloaded from github issuing:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"git clone https://github.com/opencadc/&lt;module_name&gt;\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "By example, the AccessControl module can be obtained issuing:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"git clone https://github.com/opencadc/ac\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "The internal dependencies needed to build each software component can be extratcted by <command>&lt;component_name&gt;/&lt;sub_module&gt;/build.xml</command> file."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Internal dependencies:"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "Internal dependencies of cadcAccessControl-Server"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "cadcRegistry.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "https://github.com/opencadc/reg/cadcRegistry"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "cadcUtil.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "https://github.com/opencadc/core/cadcUtil"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "cadcLog.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "https://github.com/opencadc/core/cadcLog"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "cadcUWS.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "https://github.com/opencadc/uws/cadcUWS"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "cadcUWS-Server.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "https://github.com/opencadc/uws/cadcUWS-Server"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "cadcAccessControl.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "https://github.com/opencadc/ca/cadcAccessControl"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "External dependencies:"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "External dependencies of cadcAccessControl-Server"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "junit.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "http://"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "asm.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "cglib.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "easymock.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "objenesis.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "jsonassert.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "mail.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "xerces.jar"
+msgstr ""
+
+#. Tag: entry
+#, no-c-format
+msgid "commons-logging.jar"
+msgstr ""
+

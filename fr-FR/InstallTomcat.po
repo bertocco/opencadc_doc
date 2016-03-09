@@ -1,0 +1,335 @@
+# 
+# AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0\n"
+"POT-Creation-Date: 2016-03-04 12:35+0100\n"
+"PO-Revision-Date: 2016-03-04 12:35+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: None\n"
+"MIME-Version: 1.0\n"
+"Content-Type: application/x-publican; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Tag: title
+#, no-c-format
+msgid "Tomcat Web Server Installation"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "This chapter explains hot to configure tomcat web server to support ssl, proxies and opencadc name-password login. The guide is mainly based on two different installation guides and on cadcTomcat documentation:"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "This chapter is mainly based on two different installation guides and on opencadc github."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Reference documentation:"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<ulink url=\"https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-centos-7\">How To Install Apache Tomcat 8 on CentOS 7</ulink>"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<ulink url=\"https://panovski.me/install-tomcat-8-on-centos-7\">Install Tomcat 8 on CentOS 7</ulink>"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<ulink url=\"https://github.com/opencadc/ac/tree/master/cadcTomcat\">cadcTomcat documentation</ulink>"
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Tomcat Download and Install"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Install java"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"yum install java-1.7.0-openjdk-devel\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Find the latest version of Tomcat 8 at the <ulink url=\"http://tomcat.apache.org/download-80.cgi\">Tomcat 8 Downloads page</ulink> and let's download the latest binary distribution. You can do it using wget and paste in the link to download the Tomcat 8 archive, like this (your mirror link will probably differ from the example):"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"wget http://mirrors.muzzy.it/apache/tomcat/tomcat-8/v8.0.32/bin/apache-tomcat-8.0.32.tar.gz\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create the future tomcat home directory and uncompress there the newly downloaded package."
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"mkdir -p /opt/tomcat\n"
+"tar xvf apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1\n"
+""
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Run tomcat as tomcat user"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create the tomcat group:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"groupadd tomcat\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create tomcat user making this user a member of the tomcat group, with a home directory of /opt/tomcat (where we already installed Tomcat), and with a shell of /bin/false (so nobody can log into the tomcat account):"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"sudo useradd -M -s /bin/nologin -g tomcat -d /opt/tomcat tomcat\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Update permissions:"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "--Selectively"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cd /opt/tomcat\n"
+"sudo chgrp -R tomcat conf\n"
+"sudo chmod g+rwx conf\n"
+"sudo chmod g+r conf/*\n"
+"\n"
+"chown -R tomcat webapps/ work/ temp/ logs/\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "--Unselectively and Faster:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"chown tomcat: /opt/tomcat -R \n"
+""
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Install Systemd Unit File"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create the file below:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cat /etc/systemd/system/tomcat.service\n"
+"\n"
+"# Systemd unit file for tomcat\n"
+"[Unit]\n"
+"Description=Apache Tomcat Web Application Container\n"
+"After=syslog.target network.target\n"
+"\n"
+"[Service]\n"
+"Type=forking\n"
+"\n"
+"Environment=JAVA_HOME=/usr/lib/jvm/jre\n"
+"Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid\n"
+"Environment=CATALINA_HOME=/opt/tomcat\n"
+"Environment=CATALINA_BASE=/opt/tomcat\n"
+"Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'\n"
+"Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'\n"
+"\n"
+"ExecStart=/opt/tomcat/bin/startup.sh\n"
+"ExecStop=/bin/kill -15 $MAINPID\n"
+"\n"
+"User=tomcat\n"
+"Group=tomcat\n"
+"\n"
+"[Install]\n"
+"WantedBy=multi-user.target\n"
+"\n"
+"EOF\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Adjust permissions:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"chown tomcat: /usr/lib/systemd/system/tomcatJSVC.service\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Reload Systemd to load the Tomcat unit file:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"systemctl daemon-reload\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Enable the Tomcat service, so it starts on server boot:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"systemctl enable tomcat\n"
+""
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Start tomcat web server as tomcat user on port 80 or 443 using JSVC"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Build Jsvc using java 1.8.0, install jsvc executable and assign suitable permissions:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cd /opt/tomcat/bin  \n"
+"tar xvfz commons-daemon-native.tar.gz  \n"
+"cd commons-daemon-*-native-src/unix  \n"
+"./configure --with-java=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.71-2.b15.el7_2.x86_64\n"
+"make  \n"
+"cp jsvc ../..  \n"
+"cd ../..\n"
+"chown tomcat: commons-daemon-1.0.15-native-src -R\n"
+"chown tomcat: jsvc\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create a systemd service using jsvc to start tomcat"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cat /usr/lib/systemd/system/tomcatJSVC.service\n"
+"\n"
+"[Unit]\n"
+"Description=Apache Tomcat Web Application Container\n"
+"After=network.target\n"
+"\n"
+"[Service]\n"
+"Type=forking\n"
+"PIDFile=/var/run/tomcat.pid\n"
+"Environment=CATALINA_PID=/var/run/tomcat.pid\n"
+"Environment=JAVA_HOME=/usr/java/default\n"
+"Environment=CATALINA_HOME=/opt/tomcat\n"
+"Environment=CATALINA_BASE=/opt/tomcat\n"
+"Environment=CATALINA_OPTS=\n"
+"\n"
+"ExecStart=/opt/tomcat/bin/jsvc \\\n"
+"            -Dcatalina.home=${CATALINA_HOME} \\\n"
+"            -Dcatalina.base=${CATALINA_BASE} \\\n"
+"            -cp ${CATALINA_HOME}/bin/commons-daemon.jar:${CATALINA_HOME}/bin/bootstrap.jar:${CATALINA_HOME}/bin/tomcat-juli.jar \\\n"
+"            -user tomcat \\\n"
+"            -java-home ${JAVA_HOME} \\\n"
+"            -pidfile /var/run/tomcat.pid \\\n"
+"            -errfile SYSLOG \\\n"
+"            -outfile SYSLOG \\\n"
+"            $CATALINA_OPTS \\\n"
+"            org.apache.catalina.startup.Bootstrap\n"
+"\n"
+"ExecStop=/opt/tomcat/bin/jsvc \\\n"
+"            -pidfile /var/run/tomcat.pid \\\n"
+"            -stop \\\n"
+"            org.apache.catalina.startup.Bootstrap\n"
+"\n"
+"[Install]\n"
+"WantedBy=multi-user.target\n"
+"\n"
+"EOF\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Reload Systemd to load the Tomcat unit file"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Enable the Tomcat service, so it starts on server boot"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"systemctl enable tomcatJSVC\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Open port 8080 in the firewall"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"firewall-cmd --zone=public --add-port=8080/tcp --permanent  \n"
+"firewall-cmd --reload  \n"
+""
+msgstr ""
+

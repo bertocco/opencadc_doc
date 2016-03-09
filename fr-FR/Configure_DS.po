@@ -1,0 +1,418 @@
+# 
+# AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0\n"
+"POT-Creation-Date: 2016-03-04 12:35+0100\n"
+"PO-Revision-Date: 2016-03-04 12:35+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: None\n"
+"MIME-Version: 1.0\n"
+"Content-Type: application/x-publican; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Tag: title
+#, no-c-format
+msgid "389 Directory server configuration"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "The directory server must be configured to support SSL connection through x509 certificates and suitably initialized."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Reference documentation: <ulink url=\"http://directory.fedoraproject.org/docs/389ds/howto/howto-ssl.html\">Configuring TLS/SSL Enabled 389 Directory Server</ulink> and specifically <ulink url=\"http://directory.fedoraproject.org/docs/389ds/howto/howto-ssl.html#importing-an-existing-self-sign-keycert-or-3rd-party-cacert\">Importing an Existing Self Sign Key/Cert or 3rd Party Ca/Cert</ulink> and <ulink url=\"http://directory.fedoraproject.org/docs/389ds/howto/howto-ssl.html#preparing-pinpassword-files-for-the-certificate-databases\">Preparing PIN/password files for the certificate databases</ulink>."
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Enable SSL support step by step"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Stop 389 ds"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Require a x509 certificate for your server to a Certification Authority."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create a .p12 version of your server certificate with empty password (press &lt;enter&gt; when password is asked):"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"openssl pkcs12 -export -inkey PRIVATE-KEY -in CERTIFICATE -out /path/crt.p12 -nodes -name ’Server-Cert’\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Import your .p12 cert in admin-srv:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cd /etc/dirsrv/admin-serv\n"
+"pk12util -i /path/crt.p12 -d .\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Import the CA chain in admin-srv. If there are a root cert and intermediate certs, the process must be repeated one time for each cert."
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"certutil -d /etc/dirsrv/admin-serv -A -n \"My Local CA Intermediate\" -t CT,, -a -i /path/CAIntermediateCert.pem\n"
+"certutil -d /etc/dirsrv/admin-serv -A -n \"My Trusted Root CA Cert\" -t CT,, -a -i /path/CATrustedRootCert.pem\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Start 389 ds"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "open 389-console, open Directory Server, click on \"Manage certificates\". The console ask to choose a password for the certificate database, choose one (&lt;your_cert_db_password&gt;). Exit and stop 389 ds."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Import the .p12 server cert and the ca certs in your local ds instance:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cd /etc/dirsrv/slapd-&lt;your_local_instance&gt;\n"
+"pk12util -i /path/crt.p12 -d .\n"
+"  Enter Password or Pin for \"NSS Certificate DB\": &lt;your_cert_db_password&gt;\n"
+"  Enter password for PKCS12 file: &lt;empty&gt;\n"
+"  pk12util: PKCS12 IMPORT SUCCESSFUL\n"
+"certutil -d /etc/dirsrv/admin-serv -A -n \"My Local CA Intermediate\" -t CT,, -a -i /path/CAIntermediateCert.pem\n"
+"certutil -d /etc/dirsrv/admin-serv -A -n \"My Trusted Root CA Cert\" -t CT,, -a -i /path/CATrustedRootCert.pem\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Edit /etc/dirsrv/admin-serv/nss.conf and change NSSPassPhraseDialog:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"NSSPassPhraseDialog  file://///etc/dirsrv/admin-serv/password.conf\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create /etc/dirsrv/admin-serv/password.conf:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"touch /etc/dirsrv/admin-serv/password.conf    \n"
+"chmod 600 /etc/dirsrv/admin-serv/password.conf    \n"
+"chown ldap /etc/dirsrv/admin-serv/password.conf    \n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Edit /etc/dirsrv/admin-serv/password.conf and place this single line in there:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"internal:adminserv_cert_password    \n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "For your local Directory Server instance create /etc/dirsrv/slapd-instance_name/pin.txt (substitute slapd-instance_name for actual server instance’s directory name):"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"touch /etc/dirsrv/slapd-instance_name/pin.txt    \n"
+"chmod 600 /etc/dirsrv/slapd-instance_name/pin.txt    \n"
+"chown ldap /etc/dirsrv/slapd-instance_name/pin.txt    \n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Edit the pin.txt file and place a single line in it (notice the difference in internal token name between this and Admin Server’s):"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"Internal (Software) Token:dirserv_cert_password\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Restart the server to test whether it doesn’t ask for the PIN anymore and starts up properly with TLS/SSL."
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Modify 389 Directory Server Schema"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "First step is to modify the ldap schema to define a custom user account, which main feature is to have a field <command>numericid</command> used by the software as a unique user identification key. To perform this modification create the subsequent file with the content below (where you substitute sutably &lt;YOUR_SERVER_NAMEi&gt;, &lt;FQDN&gt;, &lt;YOUR_INSTANCE_NAME&gt;):"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cat /etc/dirsrv/slapd-gms/schema/90canfar.ldif\n"
+"\n"
+"dn: cn=schema\n"
+"objectClass: top\n"
+"objectClass: ldapSubentry\n"
+"objectClass: subschema\n"
+"cn: schema\n"
+"aci: (target=\"ldap:///cn=schema\")(targetattr !=\"aci\")(version 3.0;acl \"anonymous, no acis\"; allow (read, search, compare) userdn = \"ldap:///anyone\";)\n"
+"aci: (targetattr=\"*\")(version 3.0; acl \"Configuration Administrators Group\"; allow (all) groupdn=\"ldap:///cn=Configuration Administrators,ou=Groups,ou=TopologyManagement,o=NetscapeRoot\";)\n"
+"aci: (targetattr=\"*\")(version 3.0; acl \"Configuration Administrator\"; allow (all) userdn=\"ldap:///uid=admin,ou=Administrators,ou=TopologyManagement,o=NetscapeRoot\";)\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"SIE Group\"; allow (all) groupdn = \"ldap:///cn=slapd-YOUR_INSTANCE_NAME,cn=389 Directory Server,cn=Server Group,cn=YOUR_SERVER_NAME.FQDN,ou=FQDN,o=NetscapeRoot\";)\n"
+"modifiersName: cn=directory manager\n"
+"objectClasses: ( cadcaccount-oid NAME 'cadcaccount' DESC '' SUP top STRUCTURAL MUST ( cn $ givenName $ sn ) MAY ( address $ city $ country $ distinguishedName $ email $ institute $ numericid ) X-ORIGIN 'user defined' )\n"
+"attributeTypes: ( numericid-oid NAME 'numericid' DESC 'Intermal CADC ID (numeric)' EQUALITY numericStringMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.36 SINGLE-VALUE X-ORIGIN 'user defined' )\n"
+"attributeTypes: ( email-oid NAME 'email'  EQUALITY caseIgnoreMatch SUBSTR caseIgnoreOrderingMatch-default SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 X-ORIGIN 'user defined' )\n"
+"attributeTypes: ( address-oid NAME 'address'  EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringMatch-default SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 X-ORIGIN 'user defined' )\n"
+"attributeTypes: ( city-oid NAME 'city'  EQUALITY caseIgnoreMatch SUBSTR caseIgnoreOrderingMatch-default SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 X-ORIGIN 'user defined' )\n"
+"attributeTypes: ( country-oid NAME 'country'  EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringMatch-default SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 X-ORIGIN 'user defined' )\n"
+"attributeTypes: ( cadcid-oid NAME 'cadcid' DESC 'Internal  CADC ID (numeric)'EQUALITY numericStringMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.36 SINGLE-VALUE X-ORIGIN 'user defined' )\n"
+"attributeTypes: ( institute-oid NAME 'institute'  EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringMatch-default SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 X-ORIGIN 'user defined' )\n"
+"nsSchemaCSN: 56057cfd000000000000\n"
+""
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Create LDAP tree"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Login in the directory console as 'Directory Manager'. Parameters:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"User ID: cn=Directory Manager\n"
+"Password: ********\n"
+"Administration URL: https://youradminserver.yourdomain:9830\n"
+"    "
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create your directory server root:"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Go through the tree on the left side panel to reach \"Directory Server\", open it clicking on \"open\"."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Click on the \"Configuration\" tab,"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "On the left side tree right click \"Data\" and choose \"New Root Suffix\". Input in the 'Name' field \"dc=testcanfar\", check \"Create associated database automatically\" and choose a database name (i.e. testcanfar)."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Go to \"Directory\" tab."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "In to the tree on the left side, right click on your root, choose \"New Root Object\", select the newly created \"cn=testcanfar\" and choose to create it as \"domain\"."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create the tree included in the newly created testcanfar root. Content to be created:"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Organizational Units \"SpecialUsers\", \"ds\""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "In \"SpecialUsers\" OU create a new user with \"User ID\" testproxy."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "In \"ds\" OU create four other OUs:"
+msgstr ""
+
+#. Tag: member
+#, no-c-format
+msgid "\"Groups\""
+msgstr ""
+
+#. Tag: member
+#, no-c-format
+msgid "\"AdminGroups\""
+msgstr ""
+
+#. Tag: member
+#, no-c-format
+msgid "\"UserRequests\""
+msgstr ""
+
+#. Tag: member
+#, no-c-format
+msgid "\"Users\""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "The procedure to create a new leaf on a tree is: iright click on the root where you want to add, choose \"new\", choose the type of the leaf (OU, USER,...), fill the name of the unit to be created and eventually other mandatory fields."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "In \"Groups\" OU add a group with name \"cadc-ops\""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create your root directory organizational unit the same way you created the \"testcanfar\" tree: you must have an Organizational Unit \"SpecialUsers\" and a \"ds\" subtree equals to the \"ds\" subtree created in \"testcanfar\" root. The only difference is that in \"SpecialUsers\" a user with User ID webproxy must be created (in place of the \"testproxy\" present in testcanfar-SpecialUsers)."
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Initialize LDAP Tree Access Control Instructions (ACI)"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "An example of the ACI configuration is below."
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"# extended LDIF\n"
+"#\n"
+"# LDAPv3\n"
+"# base &lt;dc=canfar,dc=net&gt; with scope subtree\n"
+"# filter: (aci=*)\n"
+"# requesting: aci \n"
+"#\n"
+"\n"
+"# canfar.net\n"
+"dn: dc=canfar,dc=net\n"
+"aci: (targetattr = \"*\")(version 3.0;acl \"Configuration Administrators Group\";a\n"
+" llow (all) (groupdn = \"ldap:///cn=Configuration Administrators, ou=Groups, ou\n"
+" =TopologyManagement, o=NetscapeRoot\")\n"
+"\n"
+"# ds, canfar.net\n"
+"dn: ou=ds,dc=canfar,dc=net\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Admin access\"; allow (all) groupdn=\"\n"
+" ldap:///cn=cadc-ops,ou=groups,ou=ds,dc=canfar,dc=net\"\n"
+" \n"
+"# Users, ds, canfar.net\n"
+"dn: ou=Users,ou=ds,dc=canfar,dc=net\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Allow webproxy full access to attrib\n"
+" utes of existing users\"; allow (write,read,search,compare,delete) userdn =\"ld\n"
+" ap:///uid=webproxy,ou=SpecialUsers,dc=canfar,dc=net\"\n"
+"\n"
+"# UserRequests, ds, canfar.net\n"
+"dn: ou=UserRequests,ou=ds,dc=canfar,dc=net\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Add new user requests\"; allow (add) \n"
+" userdn=\"ldap:///uid=webproxy,ou=SpecialUsers,dc=canfar,dc=net\"\n"
+"\n"
+"# Groups, ds, canfar.net\n"
+"dn: ou=Groups,ou=ds,dc=canfar,dc=net\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Allow webproxy full access\"; allow(a\n"
+" dd,read,write,search,compare,delete) userdn=\"ldap:///uid=webproxy,ou=SpecialU\n"
+" sers,dc=canfar,dc=net\"\n"
+"\n"
+"# AdminGroups, ds, canfar.net\n"
+"dn: ou=AdminGroups,ou=ds,dc=canfar,dc=net\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Allow webproxy full access\"; allow(a\n"
+" dd,read,write,search,compare,delete) userdn=\"ldap:///uid=webproxy,ou=SpecialU\n"
+" sers,dc=canfar,dc=net\"\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "The configuration can be fast edited using ldapvi. Example of ldapvi screen:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"ldapvi  -D \"cn=directory manager\" -b dc=testcanfar \"objectclass=*\" aci\n"
+"\n"
+"0 dc=testcanfar\n"
+"aci: (targetattr != \"userPassword\") (version 3.0; acl \"Anonymous access\"; allow (read, search, compare)userdn = \"ldap:///anyone\";)\n"
+"aci: (targetattr != \"nsroledn||aci\")(version 3.0; acl \"Allow self entry modification except for nsroledn and aci attributes\"; allow (write)userdn =\"ldap:///self\";)\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Configuration Adminstrator\"; allow (all) userdn = \"ldap:///uid=admin,ou=Administrators,ou=TopologyManagement,o=NetscapeRoot\";)\n"
+"aci: (targetattr =\"*\")(version 3.0;acl \"Configuration Administrators Group\";allow (all) (groupdn = \"ldap:///cn=Configuration Administrators, ou=Groups, ou=TopologyManagement, o=NetscapeRoot\");)\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"SIE Group\"; allow (all)groupdn = \"ldap:///dc=testcanfar\";)\n"
+"\n"
+"1 ou=SpecialUsers,dc=testcanfar\n"
+"\n"
+"2 ou=ds,dc=testcanfar\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Admin access\"; allow (all) groupdn=\"ldap:///cn=cadc-ops,ou=Groups,ou=ds,dc=testcanfar\";)\n"
+"\n"
+"3 ou=Groups,ou=ds,dc=testcanfar\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Allow testproxy full access\"; allow(add,read,write,search,compare,delete) (userdn=\"ldap:///uid=testproxy,ou=SpecialUsers,dc=testcanfar\");)\n"
+"\n"
+"4 cn=cadc-ops,ou=Groups,ou=ds,dc=testcanfar\n"
+"\n"
+"5 ou=AdminGroups,ou=ds,dc=testcanfar\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Allow testproxy full access\"; allow(add,read,write,search,compare,delete) (userdn=\"ldap:///uid=testproxy,ou=SpecialUsers,dc=testcanfar\");)\n"
+"\n"
+"6 ou=UserRequests,ou=ds,dc=testcanfar\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Add new user requests\"; allow (add) (userdn=\"ldap:///uid=testproxy,ou=SpecialUsers,dc=testcanfar\");)\n"
+"\n"
+"7 ou=Users,ou=ds,dc=testcanfar\n"
+"aci: (targetattr = \"*\")(version 3.0; acl \"Allow webproxy full access to attributes of existing users\"; allow (write,read,search,compare,delete) (userdn =\"ldap:///uid=testproxy,ou=SpecialUsers,dc=testcanfar\");)\n"
+"\n"
+"8 uid=testproxy,ou=SpecialUsers,dc=testcanfar\n"
+"aci: (targetattr = \"*\") (version 3.0;acl \"testproxyACI\";allow (all)(userdn = \"ldap:///anyone\");)\n"
+""
+msgstr ""
+

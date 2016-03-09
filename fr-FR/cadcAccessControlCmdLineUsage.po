@@ -1,0 +1,29 @@
+# 
+# AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0\n"
+"POT-Creation-Date: 2016-03-04 12:35+0100\n"
+"PO-Revision-Date: 2016-03-04 12:35+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: None\n"
+"MIME-Version: 1.0\n"
+"Content-Type: application/x-publican; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Tag: title
+#, no-c-format
+msgid "Access Control Utilities Usage"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "After the correct deployment and configuration, the system is ready to be used to manage users and groups."
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "New user registration"
+msgstr ""
+

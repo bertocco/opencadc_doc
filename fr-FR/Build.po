@@ -1,0 +1,79 @@
+# 
+# AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0\n"
+"POT-Creation-Date: 2016-03-04 12:35+0100\n"
+"PO-Revision-Date: 2016-03-04 12:35+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: None\n"
+"MIME-Version: 1.0\n"
+"Content-Type: application/x-publican; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Tag: title
+#, no-c-format
+msgid "Compilation Instructions"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "The provided compilation system is ant. Default compilation rules are in core/config/opencadc.properties."
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Build configuration"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To compile it is needed to download"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Download the core component:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"git clone https://github.com/opencadc/core\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Go to <command>core/etc/opencadc.properties</command> and customize the content"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Download the external dependencies and put them in the directory configured as <command>ext.lib</command> in <command>core/etc/opencadc.properties</command>"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"Build internal dependencies:\n"
+"core/cadcUtil\n"
+"core/cadcLog\n"
+"uws/cadcUWS\n"
+"uws/cadcUWS-Server\n"
+"reg/cadcRegistry\n"
+""
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"Build ac modules in the right order:\n"
+"ac/cadcAccessControl\n"
+"ac/cadcAccessControl-Server\n"
+"ac/cadcAccessControl-Admin\n"
+"ac/cadcTomcat\n"
+""
+msgstr ""
+

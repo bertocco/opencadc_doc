@@ -1,0 +1,280 @@
+# 
+# AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0\n"
+"POT-Creation-Date: 2016-03-04 12:35+0100\n"
+"PO-Revision-Date: 2016-03-04 12:35+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: None\n"
+"MIME-Version: 1.0\n"
+"Content-Type: application/x-publican; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Tag: title
+#, no-c-format
+msgid "Tomcat Web Server Configuration"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "This chapter explains hot to configure tomcat web server to support SSL using APR (Apache Portable Runtime) native support, proxies and opencadc name-password login."
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Install and configure APR and SSL support"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "* Install apr native support"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"yum install openssl-devel\n"
+"yum install tomcat-native\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create a default keystore using your server certificates released by a third party Certification Authority:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cat myCAServerIntermediateCert.pem myCARootCert.pem &gt; CAfile.pem\n"
+"openssl pkcs12 -export -in my-server-cert.pem -inkey my-server-cert.key -out server.p12 -name tomcat -CAfile CAfile.pem -caname root\n"
+"Enter Export Password: [changeit]\n"
+"Verifying - Enter Export Password: [changeit]\n"
+"keytool -importkeystore -deststorepass changeit -destkeypass changeit  -destkeystore myserver-keystore -srckeystore server.p12 -srcstoretype PKCS12 -srcstorepass changeit -alias tomcat\n"
+"cp myserver-keystore.ks ~/.keystore\n"
+"\n"
+"where the home is the home of the user running tomcat.\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create the ca-bundle adding my certs. If present, intermediate certificates must be added. As an example, we suppose to have an intermediate CA cert for Personal use different from the CA intermediate cert for server use, so both must be added to the ca-bundle:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"mkdir -p /opt/tomcat/conf/tls\n"
+"cp /etc/pki/tls/certs/ca-bundle.crt /opt/tomcat/conf/tls/tomcat-ca-bundle.crt\n"
+"cat DigiCertCA-intermediate-personal.crt &gt;&gt; /opt/tomcat/conf/tls/tomcat-ca-bundle.crt\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Tomcat and system default ca bundles must be aligned for both native (ca-bundle) and java (cacerts) applications."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Modify the system ca-bundle following the subsequent info:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cat /etc/pki/ca-trust/extracted/pem/README \n"
+"This directory /etc/pki/ca-trust/extracted/pem/ contains \n"
+"CA certificate bundle files which are automatically created\n"
+"based on the information found in the\n"
+"/usr/share/pki/ca-trust-source/ and /etc/pki/ca-trust/source/\n"
+"directories.\n"
+"\n"
+"All files are in the BEGIN/END CERTIFICATE file format, \n"
+"as decribed in the x509(1) manual page.\n"
+"\n"
+"Distrust information cannot be represented in this file format,\n"
+"and distrusted certificates are missing from these files.\n"
+"\n"
+"If your application isn't able to load the PKCS#11 module p11-kit-trust.so,\n"
+"then you can use these files in your application to load a list of global\n"
+"root CA certificates.\n"
+"\n"
+"Please never manually edit the files stored in this directory,\n"
+"because your changes will be lost and the files automatically overwritten,\n"
+"each time the update-ca-trust command gets executed.\n"
+"\n"
+"Please refer to the update-ca-trust(8) manual page for additional information.\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Steps to perform in our example:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cp DigiCertCA-intermediate-personal.crt /usr/share/pki/ca-trust-source/\n"
+"update-ca-trust\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Align tuststore for java apps:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"keytool -keystore /etc/pki/ca-trust/extracted/java/cacerts  -importcert -alias DigicertUser  -file DigiCertCA-intermediate-personal.crt\n"
+"keytool -keystore /etc/pki/ca-trust/extracted/java/cacerts  -importcert -alias DigicertServer  -file myCAServerIntermediateCert.pem \n"
+"keytool -keystore /etc/pki/ca-trust/extracted/java/cacerts  -importcert -alias DigicertTrustedRoot  -file /media/sf_bertocco/Documents/certs/marmolada_oats_inaf_it_816756/TrustedRoot.pem \n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Install server certs:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cp my-server-cert.pem /opt/tomcat/conf/tls/\n"
+"cp my-server-cert.key /opt/tomcat/conf/tls/\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Install the CA file:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cat myCAServerIntermediateCert.pem myCARootCert.pem &gt; CAfile.pem\n"
+"cp CAfile.pem /opt/tomcat/conf/tls/CA.pem\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Configure the tomcat connector in <command>${TOMCAT_HOME}/conf/server.xml</command>"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"&lt;Connector port=\"80\" protocol=\"HTTP/1.1\"\n"
+"                 connectionTimeout=\"20000\"\n"
+"                 redirectPort=\"443\" /&gt;\n"
+"\n"
+"&lt;Connector port=\"443\" protocol=\"org.apache.coyote.http11.Http11AprProtocol\"\n"
+"          maxThreads=\"150\" SSLEnabled=\"true\" scheme=\"https\" secure=\"true\"\n"
+"          SSLCertificateFile=\"/opt/tomcat/conf/tls/marmolada_oats_inaf_it.pem\"\n"
+"          SSLCertificateKeyFile=\"/opt/tomcat/conf/tls/marmolada_oats_inaf_it.key\"\n"
+"          SSLCertificateChainFile=\"/opt/tomcat/conf/tls/CA.pem\"\n"
+"          SSLCACertificateFile=\"/opt/tomcat/conf/tls/tomcat-ca-bundle.crt\"\n"
+"          SSLVerifyClient=\"require\" SSLVerifyDepth=\"10\"\n"
+"          SSLProtocol=\"ALL\"\n"
+"         /&gt;\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "And in <command>${TOMCAT_HOME}/conf/server.xml</command> it must be:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"&lt;Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" /&gt;\n"
+""
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Enable SSL debug"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To enable the SSL debug output in catalina.out, set"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"JAVA_OPTS=\"$JAVA_OPTS -Djavax.net.debug=ssl -Djava.net.debug=record,keygen,handshake\"\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "in <command>${TOMCAT_HOME/conf/catalina.sh</command>"
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Enable proxy usage in tomcat"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To enable the proxy support in tomcat, it must be defined an environment variable OPENSSL_ALLOW_PROXY_CERTS and set it equals to 1. This can be achieved adding"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"export OPENSSL_ALLOW_PROXY_CERTS=1\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "at the beginning of <command>${TOMCAT_HOME}/conf/catalina.sh</command> or, better, in the systemd service script."
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Enable login-password authentication cadc software specific"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "The login-password authentication in the cadc software is provided through a plugin. The authentication mechanism will call the access control web service (in module cadcAccessControl-Server) to see if the credentials are correct."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To use this plugin, compile it compiling the <command>ac/cadcTomcat</command> module, install it in your tomcat installation:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cp cadcTomcat.jar ${TOMCAT_HOME}/lib\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "add the following line to the element (within the element) in the tomcat 7 <command>${TOMCAT_HOME}/conf/server.xml</command> file:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"&lt;Realm className=\"ca.nrc.cadc.tomcat.CadcBasicAuthenticator\" /&gt;\n"
+""
+msgstr ""
+

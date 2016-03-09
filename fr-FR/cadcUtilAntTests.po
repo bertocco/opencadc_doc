@@ -1,0 +1,66 @@
+# 
+# AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0\n"
+"POT-Creation-Date: 2016-03-04 12:35+0100\n"
+"PO-Revision-Date: 2016-03-04 12:35+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: None\n"
+"MIME-Version: 1.0\n"
+"Content-Type: application/x-publican; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Tag: title
+#, no-c-format
+msgid "cadcUtil Tests"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "This chapter explains how to use cadc utilities tests just to check if basic utilities are well working."
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "<command>ant test</command> usage"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To run <command>ant test</command> it is needed a proxy file in <command>${CADC_PREFIX}/etc/proxy.pem</command>. This proxy file can be created starting from the user identity certificate (released by a Certification Authority) in <command>.pem</command> format or staring from <command>user_cert.pem</command> and <command>user_key.pem</command> files joined in one unique file doing:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cat mykey.pem mycert.pem &gt;&gt; mycert_and_key.pem\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "At this point, the proxy.pem file can be generated issuing:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/mycert_and_key.pem &lt;days of validity number&gt; ${CADC_PREFIX}/etc\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Now ant tests can be run:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"cd ${CADC_PREFIX}/cadcUtil\n"
+"ant test\n"
+""
+msgstr ""
+

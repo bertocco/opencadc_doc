@@ -1,0 +1,539 @@
+# 
+# AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0\n"
+"POT-Creation-Date: 2016-03-04 12:35+0100\n"
+"PO-Revision-Date: 2016-03-04 12:35+0100\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: None\n"
+"MIME-Version: 1.0\n"
+"Content-Type: application/x-publican; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Tag: title
+#, no-c-format
+msgid "389 Directory Server Install and Configure"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "389-DS (389 Directory Server) is an open source enterprise class LDAP server for Linux"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "The istallation of 389 Directory ldap Server is a prerequisite for the opencadc deployment and usage. 389 ds natively supported Operative Systems are: RHEL/CentOS/EPEL (RHEL 6, RHEL 7, CentOS 6, CentOS 7). This guide refers to a Cento7 installation."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "This chapter is based mainly on two information resources:"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<ulink url=\"http://www.unixmen.com/install-and-configure-ldap-server-in-centos-7\">Directory Server Install And Configure LDAP Server In CentOS 7</ulink>"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "and from the"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "<ulink url=\"http://directory.fedoraproject.org/\">389 Directory Server fedoraproject documentation</ulink>"
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Performance and security setup"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "As prereqiuisite, set performance and security for LDAP server. For first edit the file <command>/etc/sysctl.conf</command> and add the following lines at the end:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"net.ipv4.tcp_keepalive_time = 300\n"
+"net.ipv4.ip_local_port_range = 1024 65000\n"
+"fs.file-max = 64000\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Edit file <command>/etc/security/limits.conf</command> adding the following lines at the bottom:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"*               soft     nofile          8192\n"
+"*               hard     nofile          8192\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Edit file <command>/etc/profile</command> adding the following line at the end:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"ulimit -n 8192\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Now restart the server."
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Installation steps"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Install epel repository"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"yum install epel-release\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "and check it is enabled."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Create a LDAP user account"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"useradd ldapadmin\n"
+"passwd ldapadmin\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Install 389 directory"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"yum install 389-ds-base openldap-clients\n"
+"yum localinstall ftp://rpmfind.net/linux/epel/testing/7/x86_64/i/idm-console-framework-1.1.14-1.el7.noarch.rpm\n"
+"yum localinstall ftp://rpmfind.net/linux/epel/testing/7/x86_64/3/389-adminutil-1.1.22-1.el7.x86_64.rpm\n"
+"yum localinstall ftp://rpmfind.net/linux/epel/testing/7/x86_64/3/389-admin-1.1.42-1.el7.x86_64.rpm\n"
+"yum localinstall ftp://rpmfind.net/linux/epel/testing/7/x86_64/3/389-admin-console-1.1.10-1.el7.noarch.rpm\n"
+"yum localinstall ftp://rpmfind.net/linux/epel/testing/7/x86_64/3/389-console-1.1.9-1.el7.noarch.rpm\n"
+"yum localinstall ftp://rpmfind.net/linux/epel/testing/7/x86_64/3/389-ds-console-1.2.12-1.el7.noarch.rpm\n"
+""
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Ldap server configuration"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Configure LDAP server running the following command:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"setup-ds-admin.pl\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Following, it is an example output with setup answers. Where the answer is not present, the defaul is taken. If the field is a password, it is not displayed but has to be filled."
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"==============================================================================\n"
+"This program will set up the 389 Directory and Administration Servers.\n"
+"\n"
+"It is recommended that you have \"root\" privilege to set up the software.\n"
+"Tips for using this program:\n"
+"  - Press \"Enter\" to choose the default and go to the next screen\n"
+"  - Type \"Control-B\" then \"Enter\" to go back to the previous screen\n"
+"  - Type \"Control-C\" to cancel the setup program\n"
+"\n"
+"Would you like to continue with set up? [yes]: y\n"
+"\n"
+"==============================================================================\n"
+"Your system has been scanned for potential problems, missing patches,\n"
+"etc.  The following output is a report of the items found that need to\n"
+"be addressed before running this software in a production\n"
+"environment.\n"
+"\n"
+"389 Directory Server system tuning analysis version 23-FEBRUARY-2012.\n"
+"\n"
+"NOTICE : System is x86_64-unknown-linux3.10.0-229.20.1.el7.x86_64 (1 processor).\n"
+"\n"
+"Would you like to continue? [yes]: y\n"
+"\n"
+"==============================================================================\n"
+"Choose a setup type:\n"
+"\n"
+"   1. Express\n"
+"       Allows you to quickly set up the servers using the most\n"
+"       common options and pre-defined defaults. Useful for quick\n"
+"       evaluation of the products.\n"
+"\n"
+"   2. Typical\n"
+"       Allows you to specify common defaults and options.\n"
+"\n"
+"   3. Custom\n"
+"       Allows you to specify more advanced options. This is\n"
+"       recommended for experienced server administrators only.\n"
+"\n"
+"To accept the default shown in brackets, press the Enter key.\n"
+"\n"
+"Choose a setup type [2]:\n"
+"\n"
+"==============================================================================\n"
+"==============================================================================\n"
+"Enter the fully qualified domain name of the computer\n"
+"on which you're setting up server software. Using the form\n"
+"&lt;hostname&gt;.&lt;domainname&gt;\n"
+"Example: eros.example.com.\n"
+"\n"
+"To accept the default shown in brackets, press the Enter key.\n"
+"\n"
+"Warning: This step may take a few minutes if your DNS servers\n"
+"can not be reached or if DNS is not configured correctly.  If\n"
+"you would rather not wait, hit Ctrl-C and run this program again\n"
+"with the following command line option to specify the hostname:\n"
+"\n"
+"    General.FullMachineName=your.hostname.domain.name\n"
+"\n"
+"Computer name [marmolada.oats.inaf.it]:\n"
+"\n"
+"==============================================================================\n"
+"The servers must run as a specific user in a specific group.\n"
+"It is strongly recommended that this user should have no privileges\n"
+"on the computer (i.e. a non-root user).  The setup procedure\n"
+"will give this user/group some permissions in specific paths/files\n"
+"to perform server-specific operations.\n"
+"\n"
+"If you have not yet created a user and group for the servers,\n"
+"create this user and group using your native operating\n"
+"system utilities.\n"
+"\n"
+"System User [nobody]: ldapadmin\n"
+"System Group [nobody]: ldapadmin\n"
+"\n"
+"==============================================================================\n"
+"Server information is stored in the configuration directory server.\n"
+"This information is used by the console and administration server to\n"
+"configure and manage your servers.  If you have already set up a\n"
+"configuration directory server, you should register any servers you\n"
+"set up or create with the configuration server.  To do so, the\n"
+"following information about the configuration server is required: the\n"
+"fully qualified host name of the form\n"
+"&lt;hostname&gt;.&lt;domainname&gt;(e.g. hostname.example.com), the port number\n"
+"(default 389), the suffix, the DN and password of a user having\n"
+"permission to write the configuration information, usually the\n"
+"configuration directory administrator, and if you are using security\n"
+"(TLS/SSL).  If you are using TLS/SSL, specify the TLS/SSL (LDAPS) port\n"
+"number (default 636) instead of the regular LDAP port number, and\n"
+"provide the CA certificate (in PEM/ASCII format).\n"
+"\n"
+"If you do not yet have a configuration directory server, enter 'No' to\n"
+"be prompted to set up one.\n"
+"\n"
+"Do you want to register this software with an existing\n"
+"configuration directory server? [no]:\n"
+"\n"
+"==============================================================================\n"
+"Please enter the administrator ID for the configuration directory\n"
+"server.  This is the ID typically used to log in to the console.  You\n"
+"will also be prompted for the password.\n"
+"\n"
+"Configuration directory server\n"
+"administrator ID [admin]: root\n"
+"Password:\n"
+"Password (confirm):\n"
+"\n"
+"==============================================================================\n"
+"==============================================================================\n"
+"The information stored in the configuration directory server can be\n"
+"separated into different Administration Domains.  If you are managing\n"
+"multiple software releases at the same time, or managing information\n"
+"about multiple domains, you may use the Administration Domain to keep\n"
+"them separate.\n"
+"\n"
+"If you are not using administrative domains, press Enter to select the\n"
+"default.  Otherwise, enter some descriptive, unique name for the\n"
+"administration domain, such as the name of the organization\n"
+"responsible for managing the domain.\n"
+"\n"
+"Administration Domain [oats.inaf.it]:\n"
+"\n"
+"==============================================================================\n"
+"The standard directory server network port number is 389.  However, if\n"
+"you are not logged as the superuser, or port 389 is in use, the\n"
+"default value will be a random unused port number greater than 1024.\n"
+"If you want to use port 389, make sure that you are logged in as the\n"
+"superuser, that port 389 is not in use.\n"
+"\n"
+"Directory server network port [389]:\n"
+"\n"
+"==============================================================================\n"
+"Each instance of a directory server requires a unique identifier.\n"
+"This identifier is used to name the various\n"
+"instance specific files and directories in the file system,\n"
+"as well as for other uses as a server instance identifier.\n"
+"\n"
+"Directory server identifier [marmolada]: gms-ds\n"
+"\n"
+"==============================================================================\n"
+"The suffix is the root of your directory tree.  The suffix must be a valid DN.\n"
+"It is recommended that you use the dc=domaincomponent suffix convention.\n"
+"For example, if your domain is example.com,\n"
+"you should use dc=example,dc=com for your suffix.\n"
+"Setup will create this initial suffix for you,\n"
+"but you may have more than one suffix.\n"
+"Use the directory server utilities to create additional suffixes.\n"
+"\n"
+"Suffix [dc=oats, dc=inaf, dc=it]: dc=iinaf, dc=it\n"
+"\n"
+"==============================================================================\n"
+"==============================================================================\n"
+"Certain directory server operations require an administrative user.\n"
+"This user is referred to as the Directory Manager and typically has a\n"
+"bind Distinguished Name (DN) of cn=Directory Manager.\n"
+"You will also be prompted for the password for this user.  The password must\n"
+"be at least 8 characters long, and contain no spaces.\n"
+"Press Control-B or type the word \"back\", then Enter to back up and start over.\n"
+"\n"
+"Directory Manager DN [cn=Directory Manager]:\n"
+"Password:\n"
+"Password (confirm):\n"
+"\n"
+"==============================================================================\n"
+"The Administration Server is separate from any of your web or application\n"
+"servers since it listens to a different port and access to it is\n"
+"restricted.\n"
+"\n"
+"Pick a port number between 1024 and 65535 to run your Administration\n"
+"Server on. You should NOT use a port number which you plan to\n"
+"run a web or application server on, rather, select a number which you\n"
+"will remember and which will not be used for anything else.\n"
+"\n"
+"Administration port [9830]:\n"
+"\n"
+"==============================================================================\n"
+"Are you ready to set up your servers? [yes]:\n"
+"Creating directory server . . .\n"
+"Your new DS instance 'gms-ds' was successfully created.\n"
+"Creating the configuration directory server . . .\n"
+"Beginning Admin Server creation . . .\n"
+"Creating Admin Server files and directories . . .\n"
+"Updating adm.conf . . .\n"
+"Updating admpw . . .\n"
+"Registering admin server with the configuration directory server . . .\n"
+"Updating adm.conf with information from configuration directory server . . .\n"
+"Updating the configuration for the httpd engine . . .\n"
+"SELinux:  Could not downgrade policy file /etc/selinux/targeted/policy/policy.29, searching for an older version.\n"
+"SELinux:  Could not open policy file &lt;= /etc/selinux/targeted/policy/policy.29:  No such file or directory\n"
+"/sbin/load_policy:  Can't load policy:  No such file or directory\n"
+"libsemanage.semanage_reload_policy: load_policy returned error code 2.\n"
+"SELinux:  Could not downgrade policy file /etc/selinux/targeted/policy/policy.29, searching for an older version.\n"
+"SELinux:  Could not open policy file &lt;= /etc/selinux/targeted/policy/policy.29:  No such file or directory\n"
+"/sbin/load_policy:  Can't load policy:  No such file or directory\n"
+"libsemanage.semanage_reload_policy: load_policy returned error code 2.\n"
+"ValueError: Could not commit semanage transaction\n"
+"Starting admin server . . .\n"
+"The admin server was successfully started.\n"
+"Admin server was successfully created, configured, and started.\n"
+"Exiting . . .\n"
+"Log file is '/tmp/setupWOnBnE.log'\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "After the configuration reboot the system"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"reboot\n"
+""
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Start/Stop 389-ds services"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Make the LDAP server services to start automatically on every reboot."
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"                systemctl enable dirsrv.target\n"
+"                systemctl enable dirsrv-admin\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To start directory server, run"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"                systemctl start dirsrv.target \n"
+"                or \n"
+"                start-dirsrv\n"
+"               "
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To stop directory server, run"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"                systemctl stop dirsrv.target\n"
+"                or \n"
+"                stop-dirsrv\n"
+"                "
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To start directory server admin, run"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"                 systemctl start dirsrv-admin\n"
+"                 or \n"
+"                 start-ds-admin\n"
+"               "
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To stop directory server admin, run"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"                systemctl stop dirsrv-admin\n"
+"                or \n"
+"                stop-ds-admin\n"
+"                "
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Commands to check the status of the both services:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"                 systemctl status dirsrv.target   \n"
+"                 systemctl status dirsrv-admin\n"
+"               "
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Commands to restart the services:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"                 systemctl restart dirsrv.target\n"
+"                 systemctl restart dirsrv-admin\n"
+"               "
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Configuration files are in <command>/etc/dirsrv/</command> directory."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "Log files are in <command>/var/log/dirsrv/</command> directory."
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "It is suggested to disable SELINUX setting <command>SELINUX=disabled</command> in the file <command>/etc/selinux/config</command>"
+msgstr ""
+
+#. Tag: title
+#, no-c-format
+msgid "Use and test the system"
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To test the system you can try by command line:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"ldapsearch -x -b \"dc=inaf,dc=it\"\n"
+"ldapsearch  -b \"dc=inaf,dc=it\" -D \"cn=Directory Manager,dc=inaf,dc=it\"\n"
+"ldapsearch  -b \"dc=inaf,dc=it\" -D \"cn=Directory Manager,dc=inaf,dc=it\" -W\n"
+"ldapsearch  -b \"dc=inaf,dc=it\" -D \"cn=Directory Manager\" -W\n"
+"ldapsearch  -b \"dc=inaf,dc=it\" -D \"cn=Directory Manager,dc=inaf,dc=it\" -P\n"
+""
+msgstr ""
+
+#. Tag: para
+#, no-c-format
+msgid "To open the graphycal console:"
+msgstr ""
+
+#. Tag: screen
+#, no-c-format
+msgid "\n"
+"389-console \n"
+""
+msgstr ""
+
