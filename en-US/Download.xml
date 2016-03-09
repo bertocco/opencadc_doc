@@ -1,10 +1,13 @@
 <chapter id="CADC_AC_Users_Guide-Download_Chapter">
 <title>The Software Repository</title>
 <para>The opencadc software is available on a github repository: 
+</para>
 <screen>
 https://github.com/opencadc
 </screen>
-The opencadc github repository contains a set of software components and libraries:
+<para>The opencadc github repository contains a set of software components and libraries:
+</para>
+
 <orderedlist>
 <listitem>
 <para><menuchoice><guimenu>ac</guimenu></menuchoice> : client and server implementations for user and group management</para>
@@ -43,11 +46,13 @@ The opencadc github repository contains a set of software components and librari
 <para><menuchoice><guimenu>wcs</guimenu></menuchoice> : Java + JNI wrapper for wcslib</para>
 </listitem>
 </orderedlist>
-A copy of the each component can be obtained by:
+
+<para>A copy of the component can be obtained by:
+</para>
 <screen>
 git clone https://github.com/opencadc/&lt;component_name&gt;
 </screen>
-or downloaded as .zip file by the github web interface
+<para>or downloaded as .zip file by the github web interface
 <mediaobject>
 <imageobject>
   <imagedata fileref="./images/download_from_git.jpg" />
@@ -55,75 +60,179 @@ or downloaded as .zip file by the github web interface
 </mediaobject>
 </para>
 
-
-
 <section id="CADC_AC_Users_Guide-Download_Chapter_Section_1">
+<title>Build an opencadc software module</title>
+
+<para>After downloading, each opencadc software module can be built using the <command>ant</command> build system. An ant build file (<command>build.xml</command>) is provided in the home directory of each component. Moreover, using the same tools, a set of functionality tests can be launched to check the system after the deployment.
+</para>
+<para>
+Each component has a set of dependencies, both external and internal. The more reliable way to know the right set of dependencies is to check inside the component build file (<command>build.xml</command>).
+</para>
+
+</section>
+
+
+<section id="CADC_AC_Users_Guide-Download_Chapter_Section_2">
 <title>Download and build Access Control module from github</title>
-<para>It is suggested to create a work directory and moving on it, i.e. 
+
+<para>As first step, it is suggested to create a work directory and moving on it, i.e. 
+</para>
 <screen>
 mkdir opencadc
 cd opencadc
 </screen>
-A copy of each opencadc software module can be downloaded from github issuing:
+<para>The first module to download is the <command>core</command> module because in its <emphasis role="italic">etc</emphasis> directory the compilation rules for all the opencadc software modules are defined. To download the core module issue:</para>
 <screen>
-git clone https://github.com/opencadc/&lt;module_name&gt;
+git clone https://github.com/opencadc/&lt;core&gt;
 </screen>
+<para>Then the compilation process must be suitably customized filling the file <command>/&lt;mypath&gt;/&lt;opencadc&gt;/core/etc/opencadc.properties</command>.
 </para>
 <para>
-By example, the AccessControl module can be obtained issuing:
+The CADC_PREFIX environment variable must be set to contain the <command>core</command> home directory. Example:
+</para>
 <screen>
-git clone https://github.com/opencadc/ac
+export CADC_PREFIX=/&lt;mypath&gt;/&lt;opencadc&gt;/core
 </screen>
+<para>After the compilation configuration steps, the Access Control module can be downloaded from github:
 </para>
-<para>The internal dependencies needed to build each software component can be extratcted by <command>&lt;component_name&gt;/&lt;sub_module&gt;/build.xml</command> file. 
+<screen>
+git clone https://github.com/opencadc/&lt;ac&gt;
+</screen>
+<para>The internal dependencies needed to build each <command>ac</command> module component and to run the tests can be extratcted by <command>&lt;ac&gt;/&lt;module_name&gt;/build.xml</command> file. 
 </para>
-
-<orderedlist>
-<listitem><para> 
-Internal dependencies:
-
+<para>In the case of <command>ac</command> modules, the dependencies are listed below as an example.
+</para>
+<para>
 <informaltable frame="all">
 <tgroup cols="2">
-<thead><row><entry>Internal dependencies of cadcAccessControl-Server</entry></row></thead>
+<colspec colnum="1" colname="col1" colwidth="1*"/>
+<colspec colnum="2" colname="col2" colwidth="3*"/>
+<thead><row><entry namest="col1" nameend="col2" align="center">cadcAccessControl-Server</entry></row></thead>
 <tbody>
-    <row><entry>cadcRegistry.jar</entry><entry>https://github.com/opencadc/reg/cadcRegistry</entry></row>
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Internal dependencies</emphasis></entry></row>
+    <row><entry>cadcRegistryClient.jar</entry><entry>https://github.com/opencadc/reg/cadcRegistry</entry></row>
     <row><entry>cadcUtil.jar</entry><entry>https://github.com/opencadc/core/cadcUtil</entry></row>
     <row><entry>cadcLog.jar</entry><entry>https://github.com/opencadc/core/cadcLog</entry></row>
     <row><entry>cadcUWS.jar</entry><entry>https://github.com/opencadc/uws/cadcUWS</entry></row>
-    <row><entry>cadcUWS-Server.jar</entry><entry>https://github.com/opencadc/uws/cadcUWS-Server</entry></row>
+    <row><entry>cadcUWS.jar</entry><entry>https://github.com/opencadc/uws/cadcUWS-Server</entry></row>
     <row><entry>cadcAccessControl.jar</entry><entry>https://github.com/opencadc/ca/cadcAccessControl</entry></row>
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">External dependencies</emphasis></entry></row>
+    <row><entry>json.jar</entry><entry>http://central.maven.org/maven2/org/json/json/20140107/json-20140107.jar</entry></row>
+    <row><entry>jdom2.jar</entry><entry>http://central.maven.org/maven2/org/jdom/jdom2/2.0.6/jdom2-2.0.6.jar</entry></row>
+    <row><entry>log4j.jar</entry><entry>http://central.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.jar</entry></row>
+    <row><entry>servlet-api.jar</entry><entry>http://central.maven.org/maven2/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar</entry></row>
+    <row><entry>unboundid-ldapsdk-se.jar</entry><entry>http://central.maven.org/maven2/com/unboundid/unboundid-ldapsdk/3.1.0/unboundid-ldapsdk-3.1.0.jar</entry></row>
+    <row><entry>xerces.jar</entry><entry>http://central.maven.org/maven2/xerces/xerces/2.4.0/xerces-2.4.0.jar</entry></row>
 
+    <row><?dbfo bgcolor="#FFFF00"?><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Tests dependencies</emphasis></entry></row>
+    <row><entry>junit.jar</entry><entry>http://central.maven.org/maven2/junit/junit/4.11/junit-4.11.jar</entry></row>
+    <row><entry>ant-junit.jar</entry><entry>http://central.maven.org/maven2/org/apache/ant/ant-junit/1.9.4/ant-junit-1.9.4.jar</entry></row>
+    <row><entry>asm.jar</entry><entry>http://central.maven.org/maven2/asm/asm/3.3.1/asm-3.3.1.jar</entry></row>
+    <row><entry>cgilib.jar</entry><entry>http://central.maven.org/maven2/cglib/cglib/3.2.1/cglib-3.2.1.jar</entry></row>
+    <row><entry>easymock.jar</entry><entry>http://central.maven.org/maven2/org/easymock/easymock/3.1/easymock-3.1.jar</entry></row>
+    <row><entry>objenesis.jar</entry><entry>http://central.maven.org/maven2/org/objenesis/objenesis/2.2/objenesis-2.2.jar</entry></row>
+    <row><entry>jsonassert.jar</entry><entry>http://central.maven.org/maven2/org/skyscreamer/jsonassert/1.2.3/jsonassert-1.2.3.jar</entry></row>
+    <row><entry>mail.jar</entry><entry>http://central.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar</entry></row>
+    <row><entry>xerces.jar</entry><entry>http://central.maven.org/maven2/xerces/xerces/2.4.0/xerces-2.4.0.jar</entry></row>
+    <row><entry>commons-logging.jar</entry><entry>http://central.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar</entry></row>
 </tbody>
 </tgroup>
 </informaltable>
 </para>
-</listitem>
 
-<listitem>
 <para>
-External dependencies:
 <informaltable frame="all">
 <tgroup cols="2">
-<thead><row><entry>External dependencies of cadcAccessControl-Server</entry></row></thead>
+<colspec colnum="1" colname="col1" colwidth="1*"/>
+<colspec colnum="2" colname="col2" colwidth="3*"/>
+<thead><row><entry namest="col1" nameend="col2" align="center">cadcAccessControl-Admin</entry></row></thead>
 <tbody>
-    <row><entry>junit.jar</entry><entry>http://</entry></row>
-    <row><entry></entry><entry>http://</entry></row>
-    <row><entry>asm.jar</entry><entry>http://</entry></row>
-    <row><entry>cglib.jar</entry><entry>http://</entry></row>
-    <row><entry>easymock.jar</entry><entry>http://</entry></row>
-    <row><entry>objenesis.jar</entry><entry>http://</entry></row>
-    <row><entry>jsonassert.jar</entry><entry>http://</entry></row>
-    <row><entry>mail.jar</entry><entry>http://</entry></row>
-    <row><entry>xerces.jar</entry><entry>http://</entry></row>
-    <row><entry>commons-logging.jar</entry><entry>http://</entry></row>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Internal dependencies</emphasis></entry></row>
+    <row><entry>cadcAccessControl.jar</entry><entry>https://github.com/opencadc/ac/cadcAccessControl</entry></row>
+    <row><entry>cadcAccessControl-Server.jar</entry><entry>http://github.com/opencadc/ac/cadcAccessControl-Server</entry></row>
+    <row><entry>cadcLog.jar</entry><entry>http://github.com/opencadc/core/cadcLog</entry></row>
+    <row><entry>cadcUtil.jar</entry><entry>http://github.com/opencadc/core/cadcUtil</entry></row>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">External dependencies</emphasis></entry></row>
+
+    <row><entry>log4j.jar</entry><entry>http://central.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.jar</entry></row>
+    <row><entry>commons-logging.jar</entry><entry>http://central.maven.org/maven2/commons-logging/commons-logging/1.2/commons-logging-1.2.jar</entry></row>
+    <row><entry>unboundid.jar</entry><entry>http://central.maven.org/maven2/com/unboundid/unboundid-ldapsdk/3.1.0/unboundid-ldapsdk-3.1.0.jar</entry></row>
+    <row><entry>servlet-api.jar</entry><entry>http://central.maven.org/maven2/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar</entry></row>
+    <row><entry>mail.jar</entry><entry>http://central.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar</entry></row>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Tests dependencies</emphasis></entry></row>
+    <row><entry>cadcLog.jar</entry><entry>http://github.com/opencadc/core/cadcLog</entry></row>
+    <row><entry>junit.jar</entry><entry>http://central.maven.org/maven2/junit/junit/4.11/junit-4.11.jar</entry></row>
+    <row><entry>ant-junit.jar</entry><entry>http://central.maven.org/maven2/org/apache/ant/ant-junit/1.9.4/ant-junit-1.9.4.jar</entry></row>
+    <row><entry>asm.jar</entry><entry>http://central.maven.org/maven2/asm/asm/3.3.1/asm-3.3.1.jar</entry></row>
+    <row><entry>cgilib.jar</entry><entry>http://central.maven.org/maven2/cglib/cglib/3.2.1/cglib-3.2.1.jar</entry></row>
+    <row><entry>easymock.jar</entry><entry>http://central.maven.org/maven2/org/easymock/easymock/3.1/easymock-3.1.jar</entry></row>
+    <row><entry>objenesis.jar</entry><entry>http://central.maven.org/maven2/org/objenesis/objenesis/2.2/objenesis-2.2.jar</entry></row>
+    <row><entry>jdom2.jar</entry><entry>http://central.maven.org/maven2/org/jdom/jdom2/2.0.6/jdom2-2.0.6.jar</entry></row>
+    <row><entry>json.jar</entry><entry>http://central.maven.org/maven2/org/json/json/20090211/json-20090211.jar</entry></row>
+    <row><entry>jsonassert.jar</entry><entry>http://central.maven.org/maven2/org/skyscreamer/jsonassert/1.2.3/jsonassert-1.2.3.jar</entry></row>
 
 </tbody>
 </tgroup>
 </informaltable>
 </para>
-</listitem>
 
-</orderedlist>
+<para>
+<informaltable frame="all">
+<tgroup cols="2">
+<colspec colnum="1" colname="col1" colwidth="1*"/>
+<colspec colnum="2" colname="col2" colwidth="3*"/>
+<thead><row><entry namest="col1" nameend="col2" align="center">cadcAccessControl</entry></row></thead>
+<tbody>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Internal dependencies</emphasis></entry></row>
+    <row><entry>cadcUtil.jar</entry><entry>http://github.com/opencadc/core/cadcUtil</entry></row>
+    <row><entry>cadcRegistry.jar</entry><entry>http://github.com/opencadc/reg/cadcRegistry</entry></row>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">External dependencies</emphasis></entry></row>
+    <row><entry>json.jar</entry><entry>http://central.maven.org/maven2/org/json/json/20090211/json-20090211.jar</entry></row>
+    <row><entry>jdom2.jar</entry><entry>http://central.maven.org/maven2/org/jdom/jdom2/2.0.6/jdom2-2.0.6.jar</entry></row>
+    <row><entry>log4j.jar</entry><entry>http://central.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.jar</entry></row>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Tests dependencies</emphasis></entry></row>
+    <row><entry>junit.jar</entry><entry>http://central.maven.org/maven2/junit/junit/4.11/junit-4.11.jar</entry></row>
+    <row><entry>ant-junit.jar</entry><entry>http://central.maven.org/maven2/org/apache/ant/ant-junit/1.9.4/ant-junit-1.9.4.jar</entry></row>
+    <row><entry>xerces.jar</entry><entry>http://central.maven.org/maven2/xerces/xerces/2.4.0/xerces-2.4.0.jar</entry></row>
+    <row><entry>asm.jar</entry><entry>http://central.maven.org/maven2/asm/asm/3.3.1/asm-3.3.1.jar</entry></row>
+    <row><entry>cgilib.jar</entry><entry>http://central.maven.org/maven2/cglib/cglib/3.2.1/cglib-3.2.1.jar</entry></row>
+    <row><entry>easymock.jar</entry><entry>http://central.maven.org/maven2/org/easymock/easymock/3.1/easymock-3.1.jar</entry></row>
+    <row><entry>objenesis.jar</entry><entry>http://central.maven.org/maven2/org/objenesis/objenesis/2.2/objenesis-2.2.jar</entry></row>
+    <row><entry>jsonassert.jar</entry><entry>http://central.maven.org/maven2/org/skyscreamer/jsonassert/1.2.3/jsonassert-1.2.3.jar</entry></row>
+    <row><entry>mail.jar</entry><entry>http://central.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar</entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+
+<para>
+The libraries needed to compile must be downloaded and placed in the right place with the right name, where right is determined by the path and the name expected in the build file <command>build.xml</command> and by the configuration in <command>${CADC_PREFIX}/etc/opencadc.properties</command>. 
+</para>
+<para>
+Just an example. If in the build.xml file it is:
+</para>
+<screen>
+    &lt;property name="cadcUtil"         value="${lib}/cadcUtil.jar" /&gt;
+    &lt;property name="easymock"	 value="${ext.dev}/easymock.jar" /&gt;
+    &lt;property name="junit"	         value="${ext.dev}/junit.jar" /&gt;
+</screen>
+<para>
+in the <command>${CADC_PREFIX}/etc/opencadc.properties</command> there are the definitions of <command>${lib}</command>, <command>${ext.lib}</command> and <command>${ext.dev}</command>. The file names must be as expected also. The downloaded <emphasis role="italic">easymock</emphasis> library, for example, has the name <emphasis role="italic">easymock-3.1.jar</emphasis>, but in <command>${ext.dev}</command> must be renamed or symbolik-linked to <emphasis role="italic">easymock.jar</emphasis>. 
+</para>
+<para>
+When all the needed libraries are in the right place, then the compilation can be run. As an example, the commands to compile cadcAccessControl are:
+</para>
+<screen>
+cd ${CADC_PREFIX}/../ac/cadcAccessControl
+ant build
+</screen>
+
 </section>
 
 </chapter>

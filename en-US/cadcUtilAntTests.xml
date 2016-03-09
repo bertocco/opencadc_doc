@@ -6,26 +6,115 @@
 <chapter id="chap-Documentation-AC_UsersGuide-cadcUtilAntTests_Chapter">
 	<title>cadcUtil Tests</title>
 	<para>
-		This chapter explains how to use cadc utilities tests just to check if basic utilities are well working. 
+		This chapter explains how to use cadc utilities tests. These tests are useful to check if basic utilities are well working and specifically if the https connection with the web server is correctly configured and well working. 
 	</para>
+
+<section id="sect-Documentation-AC_UsersGuide-Test_Chapter-cadcUtilAntTests_Section_0">
+   <title>Download and build core utilities</title>
+      <para>
+       Utilities are included in core module. The build process is the same described for ac module. Dependencies has to be extracted from build.xml file of each component and then downloaded and placed in the expected path (defined in ${CADC_PREFIX}/etc/opencadc.properties).
+      </para>
+<para>
+<informaltable frame="all">
+<tgroup cols="2">
+<colspec colnum="1" colname="col1" colwidth="1*"/>
+<colspec colnum="2" colname="col2" colwidth="3*"/>
+<thead><row><entry namest="col1" nameend="col2" align="center">cadcUtil dependencies</entry></row></thead>
+<tbody>
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Internal dependencies</emphasis></entry></row>
+    <row><entry namest="col1" nameend="col2">No internal dependencies</entry></row>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">External dependencies</emphasis></entry></row>
+    <row><entry>log4j.jar</entry><entry>http://central.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.jar</entry></row>
+    <row><entry>servlet-api.jar</entry><entry>http://central.maven.org/maven2/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar</entry></row>
+    <row><entry>json.jar</entry><entry>http://central.maven.org/maven2/org/json/json/20140107/json-20140107.jar</entry></row>
+    <row><entry>jdom2.jar</entry><entry>http://central.maven.org/maven2/org/jdom/jdom2/2.0.6/jdom2-2.0.6.jar</entry></row>
+    <row><entry>spring.jar</entry><entry>http://central.maven.org/maven2/org/springframework/spring/2.5.6/spring-2.5.6.jar</entry></row>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Tests dependencies</emphasis></entry></row>
+    <row><entry>jsonassert.jar</entry><entry>http://central.maven.org/maven2/org/skyscreamer/jsonassert/1.2.3/jsonassert-1.2.3.jar</entry></row>
+    <row><entry>junit.jar</entry><entry>http://central.maven.org/maven2/junit/junit/4.11/junit-4.11.jar</entry></row>
+    <row><entry>xerces.jar</entry><entry>http://central.maven.org/maven2/xerces/xerces/2.4.0/xerces-2.4.0.jar</entry></row>
+    <row><entry>easymock.jar</entry><entry>http://central.maven.org/maven2/org/easymock/easymock/3.1/easymock-3.1.jar</entry></row>
+    <row><entry>cgilib.jar</entry><entry>http://central.maven.org/maven2/cglib/cglib/3.2.1/cglib-3.2.1.jar</entry></row>
+    <row><entry>objenesis.jar</entry><entry>http://central.maven.org/maven2/org/objenesis/objenesis/2.2/objenesis-2.2.jar</entry></row>
+    <row><entry>asm.jar</entry><entry>http://central.maven.org/maven2/asm/asm/3.3.1/asm-3.3.1.jar</entry></row>
+    <row><entry>unboundid-ldapsdk-se.jar</entry><entry>http://central.maven.org/maven2/com/unboundid/unboundid-ldapsdk/3.1.0/unboundid-ldapsdk-3.1.0.jar</entry></row>
+    <row><entry>mail.jar</entry><entry>http://central.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar</entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+
+<para>
+<informaltable frame="all">
+<tgroup cols="2">
+<colspec colnum="1" colname="col1" colwidth="1*"/>
+<colspec colnum="2" colname="col2" colwidth="3*"/>
+<thead><row><entry namest="col1" nameend="col2" align="center">cadcUtil dependencies</entry></row></thead>
+<tbody>
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Internal dependencies</emphasis></entry></row>
+     <row><entry>cadcUtil.jar</entry><entry>https://github.com/opencadc/core</entry></row>
+     <row><entry>cadcRegistry.jar</entry><entry>https://github.com/opencadc/reg</entry></row>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">External dependencies</emphasis></entry></row>
+    <row><entry>log4j.jar</entry><entry>http://central.maven.org/maven2/log4j/log4j/1.2.17/log4j-1.2.17.jar</entry></row>
+    <row><entry>servlet-api.jar</entry><entry>http://central.maven.org/maven2/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar</entry></row>
+
+    <row><entry namest="col1" nameend="col2" align="center"><emphasis role="bold">Tests dependencies</emphasis></entry></row>
+    <row><entry>junit.jar</entry><entry>http://central.maven.org/maven2/junit/junit/4.11/junit-4.11.jar</entry></row>
+    <row><entry>easymock.jar</entry><entry>http://central.maven.org/maven2/org/easymock/easymock/3.1/easymock-3.1.jar</entry></row>
+    <row><entry>cgilib.jar</entry><entry>http://central.maven.org/maven2/cglib/cglib/3.2.1/cglib-3.2.1.jar</entry></row>
+    <row><entry>objenesis.jar</entry><entry>http://central.maven.org/maven2/org/objenesis/objenesis/2.2/objenesis-2.2.jar</entry></row>
+    <row><entry>asm.jar</entry><entry>http://central.maven.org/maven2/asm/asm/3.3.1/asm-3.3.1.jar</entry></row>
+
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+<para>
+When libraries are correctly placed, cadcUtil and cadcLog can be built:
+</para>
+<screen>
+cd ${CADC_PREFIX}/cadcUtil
+ant build
+cd ${CADC_PREFIX}/cadcLog
+ant build
+</screen>
+  
+</section>
+
+
 	<section id="sect-Documentation-AC_UsersGuide-Test_Chapter-cadcUtilAntTests_Section_1">
 		<title><command>ant test</command> usage</title>
-		<para>
-			To run <command>ant test</command> it is needed a proxy file in <command>${CADC_PREFIX}/etc/proxy.pem</command>. This proxy file can be created starting from the user identity certificate (released by a Certification Authority) in <command>.pem</command> format or staring from <command>user_cert.pem</command> and <command>user_key.pem</command> files joined in one unique file doing:
+	
+               <para>
+                        To run the test target (<command>ant test</command>) it is needed a proxy file placed in <command>${CADC_PREFIX}/etc/proxy.pem</command>. This proxy file can be created starting from the user identity certificate (released by a Certification Authority) in <command>.pem</command> format or staring from <command>user_cert.pem</command> and <command>user_key.pem</command> files joined in one unique file doing:
+                </para>
 <screen>
-cat mykey.pem mycert.pem >> mycert_and_key.pem
-</screen> 
-At this point, the proxy.pem file can be generated issuing:
-<screen>
-${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/mycert_and_key.pem &lt;days of validity number&gt; ${CADC_PREFIX}/etc
+cat mykey.key mycert.pem > mycert_and_key.pem
 </screen>
-Now ant tests can be run:
+<para>Certificate and key must not contain bag attributes and key must be no password protected. If needed the password can be removed doing:
+</para>
+<screen>
+openssl rsa -in mykey.key -out mykey.pem.new
+Enter pass phrase for mykey.pem: ****************
+writing RSA key
+$> mv mykey.key.new mykey.key
+</screen>
+<para>At this point, the proxy.pem file can be generated issuing:</para>
+<screen>
+${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/mycert_and_key.pem &lt;days of validity number&gt; ${CADC_PREFIX}/etc/proxy
+</screen>
+<para>Now ant tests can be run:</para>
 <screen>
 cd ${CADC_PREFIX}/cadcUtil
 ant test
 </screen>
-		</para>
-	</section>
+
+        </section>
+
 	
 </chapter>
 

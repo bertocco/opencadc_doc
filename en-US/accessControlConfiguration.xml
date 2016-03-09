@@ -229,27 +229,22 @@ In both cases a deployment descriptor file (web.xml) is needed. An example of a 
 <para>
 In this guide only manual deployment is described. Posed the following ipothesis:
 </para>
-<para>
+
 <itemizedlist>
  <listitem>
-  <para>
-application context name is "ac" 
-  </para>
+  <para> application context name is "ac" </para>
  </listitem>
  <listitem>
-  <para>
-web.xml file has the content displayed above
-  </para> 
+  <para> web.xml file has the content displayed above </para> 
  </listitem>
  <listitem>
-  <para>
-ext.lib, ext.dev, build variables have the value set in ${CADC_PROPERTIES}/etc/opencadc.properties file
-  </para> 
+  <para> ext.lib, ext.dev, build variables have the value set in ${CADC_PROPERTIES}/etc/opencadc.properties file </para> 
  </listitem>
 </itemizedlist>
-</para>
+
 <para>
 The sequence of operations to perform to manually deploy the AccessControl-Server is below:
+</para>
 <screen>
 # Deployment tree creation
 mkdir ${TOMCAT_HOME}/webapps/ac/
@@ -266,8 +261,62 @@ cp ${build}/lib/*.jar ${TOMCAT_HOME}/webapps/ac/WEB-INF/lib
 
 # At the end restart tomcat and check catalina.out for results
 </screen>
-</para>
 
 </section>
+
+<section id="CADC_AC_Users_Guide-_accessControlConfigurationChapter_Section_3">
+<title><command>ant test</command> usage</title>
+<para>
+The correctness of the overrall configuration and deployment can be checked exploiting the test target defined in the build descriptor file (build.xml) of each component.
+</para>
+<para>
+In the build.xml file of cadcAccessControl-Admin component it is:
+</para>
+<screen>
+  &lt;target name="setup-test" depends="init"&gt;
+    &lt;copy overwrite="true"
+          file="${env.A}/test-certificates/x509_CADCAuthtest1.pem"
+          tofile="build/test/class/cadcauthtest1.pem"/&gt;
+  &lt;/target&gt;
+</screen>
+<para>
+This means that, to configure tests, in some place in your file system, it must exist the file <command>test-certificates/x509_CADCAuthtest1.pem</command>. The environment varable "A" must be set to allow the system to detect the expected file.
+</para>
+<para>
+Moreover, the file x509_CADCAuthtest1.pem is the concatenation of the key and cert files of the user performing the tests joined in a unique file:
+                </para>
+<screen>
+export A=MY_PATH
+cat mykey.pem mycert.pem > ${A}/test-certificates/x509_CADCAuthtest1.pem
+</screen>
+<para>Certificate and key must not contain bag attributes and key must be not password protected. If needed the password can be removed doing:
+</para>
+<screen>
+openssl rsa -in mykey.pem -out mykey.pem.new
+Enter pass phrase for mykey.pem: ****************
+writing RSA key
+$> mv mykey.pem.new mykey.pem
+</screen>
+
+<para>
+Tests can be run, now:
+</para>
+<screen>
+cd $CADC_PREFIX}/../ac/cadcAccessControl
+ant test
+cd $CADC_PREFIX}/../ac/cadcAccessControl-Admin
+ant test
+cd $CADC_PREFIX}/../ac/cadcAccessControl-Server
+ant test
+</screen>
+
+<warning>
+<para>
+Is is strongly suggested to run each tests starting from a clean point, i.e. to run an <command>`ant clean`</command> before each test. So, the right stepa are: `ant clean`, build the single component, `ant test`. A prototype of a script to build the single components (supposing the configuration described in this guide, is added in appendix of this documentation.
+</para>
+</warning>
+
+</section>
+
 
 </chapter>

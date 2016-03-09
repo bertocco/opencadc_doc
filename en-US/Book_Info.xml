@@ -6,14 +6,16 @@
 <bookinfo id="book-Documentation-AC_UsersGuide-AC_UsersGuide">
 	<title>AC_UsersGuide</title>
 	<subtitle>Installation, configuration, deployment and run guide for the Access Control module.</subtitle>
-	<productname>Documentation</productname>
-	<productnumber>0.1</productnumber>
-	<edition>0</edition>
-	<pubsnumber>0</pubsnumber>
-	<abstract>
+        <productname>Users Guide</productname>
+         <productnumber>0.1</productnumber>
+         <edition>0</edition>
+         <pubsnumber>0</pubsnumber>
+<abstract>
 		<para>
-			Installation, configuration, deployment and run guide for the Access Control module of Open software library of Canadian Astronomy Data Center.
+			This guide explains how to install, configure, deploy and run the Access Control module of Open software library of Canadian Astronomy Data Center.
 		</para>
+                <para>In the first chapter it is explained how to download the software from github repository and how to build it. Then, it is faced the need to build the execution environment including an ldap server and a web server both enabled to support SSL connections. 389 Directory Server has been used as ldap server (mainly to exploit its "groups of groups" support), while Apache Tomcat web server has been choosen as web server and servlet engine. Installation and configuration tasks are described for both these tools. When the execution environment is ready, the deployment, configuration, test and usage of the opencadc iutilities and access control software is described.
+                </para>
 	</abstract>
 	<corpauthor>
 		<inlinemediaobject>

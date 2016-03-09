@@ -9,11 +9,285 @@
 <para>
 After the correct deployment and configuration, the system is ready to be used to manage users and groups.
 </para>
-<section id="sect-Documentation-AC_UsersGuide-Test_Chapter-AccessControlCmdLineUsage_Section_1">
-<title>New user registration</title>
-<para>
 
+<section id="sect-Documentation-AC_UsersGuide-Test_Chapter-AccessControlCmdLineUsage_Ingredients">
+  <title>Ingredients</title>
+
+<para>
+Below are listed the ingredients needed to use the command line utilities to manage users and groups.
 </para>
+
+<orderedlist>
+
+<listitem>
+<para> User certificate for authentication: mycert.crt, mykey.key</para>
+</listitem>
+
+<listitem>
+<para> A user proxy created as already described to perform cadcUtil tests:</para>
+<screen>
+cat mykey.key mycert.pem > key_and_cert.pem
+</screen>
+<para>Certificate and key must not contain bag attributes and key must be no password protected. If needed the password can be removed doing:</para>
+<screen>
+openssl rsa -in mykey.pem -out mykey.pem.new
+Enter pass phrase for mykey.pem: ****************
+writing RSA key
+$> mv mykey.pem.new mykey.pem
+</screen>
+<para>The proxy.pem file can be generated:</para>
+<screen>
+${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/mycert_and_key.pem &lt;days of validity number&gt; ${CADC_PREFIX}/etc
+</screen>
+<para>as already explained in "ant test usage"</para>
+</listitem>
+
+<listitem>
+<para>A ca-bundle configured to support the Certification Authority which released the user certificate. In centOS7 the ca-bundle could be:</para>
+<screen>
+/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+</screen>
+</listitem>
+
+<listitem>
+<para>The xml description of the users to register. As an example:</para>
+<screen>
+$ cat ~/tests/myUser.xml 
+&lt;xml version="1.0" encoding="UTF-8"?&gt;
+&lt;userRequest&gt;
+  &lt;password&gt;a_pass&lt;password&gt;
+  &lt;user&gt;
+    &lt;userID&gt;
+      &lt;identity type="HTTP">testuser&lt;identity&gt;
+    &lt;userID&gt;
+    &lt;identities/&gt;
+    &lt;details&gt;
+      &lt;userDetails type="personalDetails"&gt;
+        &lt;firstName&gt;Test&lt;firstName&gt;
+        &lt;lastName&gt;User&lt;lastName&gt;
+        &lt;email&gt;test.user@mydomain.org&lt;email&gt;
+        &lt;address&gt;via Tiepolo, 11&lt;address&gt;
+        &lt;institute&gt;Astronomical Observatory of Trieste&lt;institute&gt;
+        &lt;city&gt;Trieste&lt;city&gt;
+        &lt;country&gt;Italy&lt;country&gt;
+      &lt;userDetails&gt;
+    &lt;details&gt;
+  &lt;user&gt;
+&lt;userRequest&gt;
+</screen>
+</listitem>
+
+<listitem>
+<para>The certificate subject of the user to register. As an example:</para>
+<screen>
+subject=/DC=org/DC=terena/DC=tcs/C=IT/O=INAF/CN=Test User test.user@mydomain.org
+</screen>
+</listitem>
+
+</orderedlist>
+
+</section>
+
+
+<section id="sect-Documentation-AC_UsersGuide-Test_Chapter-AccessControlCmdLineUsage_Section_1">
+<title>User management command line tool</title>
+<para>
+User management command line interface:
+</para>
+<screen>
+Usage: java ca.nrc.cadc.ac.admin.Main &lt;arguments&gt; [-v|--verbose|-d|--debug] [-h|--help]
+Where &lt;arguments&gt; are:
+
+--list                       		: List approved users
+--list-pending               		: List users waiting for approval
+--view=&lt;userid&gt; 			: Print the entire details of &lt;user&gt; (pending or not)
+--approve=&lt;userid&gt; dn=&lt;dn&gt; 	: Approve user with userid=&lt;userid&gt; and set the
+                             		: distinguished name to &lt;dn&gt;
+--reject=&lt;userid&gt; 		: Delete this user request
+
+-v|--verbose                 		: Verbose mode print progress and error messages
+-d|--debug                   		: Debug mode print all the logging messages
+-h|--help                    		: Print this message and exit
+</screen>
+<para>
+Before to use the command line user management tool, the classpath must contain:
+</para>
+<screen>
+cadcAccessControl-Admin.jar
+cadcAccessControl.jari
+cadcAccessControl-Server.jar
+cadcLog.jar
+cadcRegistry.jar
+cadcUtil.jar
+cadcUWS.jar
+cadcUWS-Server.jar
+log4j.jar
+unboundid-ldapsdk-se.jar
+</screen>
+
+<section id='new_user_register'><title>New user registration</title>
+
+<para>A new user registration request can be performed without authentication (a generic user can require to be registered):</para>
+<screen>
+curl -v  -T newUser.xml "http://&lt;yourserver&gt;:8080/ac/users"
+</screen>
+<para>A new user registration request can be performed with authentication:</para>
+<screen>
+curl -v -T newUser.xml  --cert ./key_and_cert.pem --cacert /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  "https://&lt;yourserver&gt;/ac/users"
+</screen>
+<para>Where ingredients are which already described at the beginning of the chapter.</para>
+<para>It can be verifyed that the user appears in 389-DS in the usersRequest group</para>
+ 
+</section>
+
+
+<section  id='user_approve_reject'><title>New user approval or rejection</title>
+
+<para>The new user registration request can be approved or rejected only by authenticated users. The user is authenticated through its certificate. The certificate can be provided to the system in two ways:</para>
+<para>copying the proxy.pem file in ~/.ssl/cadcproxy.pem</para>
+<para><command>or</command></para>
+<para>by command line using the "--cert" option</para>
+
+<para>Approve:</para>
+<screen>
+java ca.nrc.cadc.ac.admin.Main --approve=testuser --dn=CN="Test User test.user@mydomain.org",O=INAF,C=IT,DC=tcs,DC=terena,DC=org
+</screen>
+<para>Reject:</para>
+<screen>
+java ca.nrc.cadc.ac.admin.Main --reject=testuser --dn=CN="Test User test.user@mydomain.org",O=INAF,C=IT,DC=tcs,DC=terena,DC=org --cert=proxy.pem
+</screen>
+<para>
+Adding a <command>-d</command> option at the end of the command, a debug output can be obtained.
+</para>
+<para>
+If the user is approved, in 389-DS can be checket that the user has been movet fron UserRequests group to User group.
+</para>
+<para>
+If the user is rejected, in 389-DS can be checket that iit disappear fron UserRequests.
+</para>
+</section>
+
+</section>
+
+
+<section id="sect-Documentation-AC_UsersGuide-Test_Chapter-AccessControlCmdLineUsage_Section_2">
+<title>New group registration and member addition</title>
+<para>
+Group management command line interface:
+</para>
+<screen>
+Usage: java ca.nrc.cadc.ac.client.GMSClientMain &lt;arguments&gt;
+Where &lt;arguments&gt; are:
+		--create 	--group=&lt;group_name&gt;
+		--get 		--group=&lt;group_name&gt;
+		--delete 	--group=&lt;group_name&gt;
+		--add-member 	--group=&lt;group_name&gt;
+		--remove-member --group=&lt;group_name&gt; --userid=&lt;userid&gt;
+		--add-admin 	--group=&lt;group_name&gt; --userid=&lt;userid&gt;
+		--remove-admin 	--group=&lt;group_name&gt; --userid=&lt;userid&gt;
+</screen>
+
+<para>
+Before to use the command line user management tool, the classpath must be set containig:
+</para>
+<screen>
+cadcAccessControl-Admin.jar
+cadcAccessControl.jari
+cadcAccessControl-Server.jar
+cadcLog.jar
+cadcRegistry.jar
+cadcUtil.jar
+cadcUWS.jar
+cadcUWS-Server.jar
+log4j.jar
+unboundid-ldapsdk-se.jar
+jdom2.jar
+xerces.jar
+</screen>
+<para>
+Group management operations can be performed only by authenticated users. The operationg user is authenticated through its certificate. The certificate can be provided to the system in two ways:</para>
+<para>
+copying the proxy.pem file in ~/.ssl/cadcproxy.pem
+</para>
+<para>or</para>
+<para>
+by command line using the <command>--cert</command> option.
+</para>
+
+<section id='new_group_register'><title>New group registration</title>
+
+<para>New group creation example:</para>
+
+<screen>
+java  ca.nrc.cadc.ac.client.GMSClientMain --create --group=NewTestGroup --cert=proxy.pem -d
+</screen>
+<para>
+Adding a <command>-d</command> option at the end of the command, a debug output can be obtained.
+</para>
+<para>
+In 389-DS Groups the new group appears and the user that created the group is the group owner.
+</para>
+</section>
+
+<section id='add_remove_group_member'><title>Add or remove a group member</title>
+
+<para>An existing and approved user can be added as member of a group. Example:</para>
+<screen>
+java  ca.nrc.cadc.ac.client.GMSClientMain --add-member --group=NewTestGroup --userid=testuser --cert=proxy.pem -d
+</screen>
+
+<para>A group member can be removed. Example:</para>
+<screen>
+java  ca.nrc.cadc.ac.client.GMSClientMain --remove-member --group=NewTestGroup --userid=testuser --cert=../../core/etc/proxy.pem -d
+</screen>
+</section>
+
+<section id='add_group_member'><title>Add a group member</title>
+
+<para>An existing and approved user can be added as member of a group.Example:</para>
+<screen>
+java  ca.nrc.cadc.ac.client.GMSClientMain --add-member --group=NewTestGroup --userid=testuser --cert=proxy.pem -d
+</screen>
+
+</section>
+
+<section id='other_group_operations'><title>Other group operation examples</title>
+
+<para>Add an administrator user to a group:</para>
+<screen>
+java  ca.nrc.cadc.ac.client.GMSClientMain --create --group=Paperopoli --cert=../../core/etc/proxy.pem -d
+</screen>
+<para>Get an existing group:</para>
+<screen>
+java  ca.nrc.cadc.ac.client.GMSClientMain --get --group=Paperopoli --userid=silvestro --cert=../../core/etc/proxy.pem -d
+</screen>
+<para>Delete an existing group</para>
+<screen>
+java  ca.nrc.cadc.ac.client.GMSClientMain --delete --group=Disneyland  --cert=../../core/etc/proxy.pem -d
+</screen>
+<para>
+When a group is removed, it is not deleted by 389-DS, but only marked as as inactive
+(nsAccountLock=true). The reason to chose to do deletions this way is to
+avoid inconsistencies. As an example: a situation where:
+</para>
+<para>
+person A creates groupA and (in some other service like vospace) grants
+permissions to groupA
+</para>
+<para>
+person A deletes groupA (marked as deleted)
+</para>
+<para>
+person B sees the permmissions granting access to groupA, so they try to
+create groupA : we want this to fail!!
+</para>
+<para>
+person A tries to create (re-create from their point-of-view) groupA; we
+want this to succeed, so there is a variant in the server where
+re-activate a group they previously deleted (but only the previous owner!)
+</para>
+
+</section>
 
 </section>
 

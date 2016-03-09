@@ -3,7 +3,7 @@
 <!ENTITY % BOOK_ENTITIES SYSTEM "AC_UsersGuide.ent">
 %BOOK_ENTITIES;
 ]>
-<book>
+<book id='AC_UsersGuide'>
 	<xi:include href="Book_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 <!--
 	<xi:include href="Preface.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
@@ -13,14 +13,15 @@
 	<xi:include href="Configure_DS.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="InstallTomcat.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="ConfigureTomcat.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="accessControlConfiguration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="cadcAccessControlCmdLineUsage.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="cadcUtilAntTests.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="cadcLog.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="accessControlConfiguration.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="cadcAccessControlCmdLineUsage.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 <!--
 	<xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 -->
 	<xi:include href="web.xml.appendix.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="build_script.appendix.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<index />
 </book>
 
