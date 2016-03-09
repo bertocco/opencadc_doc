@@ -174,6 +174,12 @@ User ID: cn=Directory Manager
 Password: ********
 Administration URL: https://youradminserver.yourdomain:9830
     </screen>
+<mediaobject>
+<imageobject>
+  <imagedata fileref="./images/enter_389ds_as_manager.png" />
+</imageobject>
+</mediaobject>
+
   </listitem>
   <listitem>
     <para>
@@ -341,6 +347,24 @@ aci: (targetattr = "*") (version 3.0;acl "testproxyACI";allow (all)(userdn = "ld
 </screen>
 
    </para>
+
+<section><title>Graphycal representation of the LDAP tree</title>
+<para>
+<mediaobject>
+<imageobject>
+  <imagedata fileref="./images/389-ds_tree.png" />
+</imageobject>
+</mediaobject>
+</para>
+<para>
+<mediaobject>
+<imageobject>
+  <imagedata fileref="./images/389-ds-tree-from-console.png" />
+</imageobject>
+</mediaobject>
+</para>
+</section>
+
 </section>
 
 </chapter>
