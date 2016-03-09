@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY PRODUCT "Documentation">
+<!ENTITY BOOKID "ACUsersGuide">
+<!ENTITY YEAR "2016">
+<!ENTITY HOLDER "| You need to change the HOLDER entity in the en-US/AC_UsersGuide.ent file |">
+]>
+<appendix>
+	<title>Build script</title>
+	<para>
+		This appendix provides a bash script to build the most common opencadc libraries.
+<screen>
+$ cat ~/bin/canfarbuild 
+#!/bin/bash
+
+
+
+#!/bin/bash 
+ 
+display_usage() { 
+	echo "Before to run this script set suitably CADC_PREFIX (path of core component)." 
+	echo -e "\nUsage:\n$0 [argument] \n" 
+        echo "Arguments:"
+        echo "  all		build all components"
+        echo "  acsrv		build ac/cadcAccessControl-Server"
+        echo "  acadm         build ac/cadcAccessControl-Admin"
+        echo "  ac         	build ac/cadcAccessControl"
+        echo "  util    	build core/cadcUtil"
+        echo "  log    		build core/cadcLog"
+        echo "  tom		build core/cadcTomcat"
+        echo "  reg		build reg/cadcRegistry"
+        echo "  uws             build uws/cadcUWS"
+        echo "  uwssrv		build uws/cadcUWS-Server"
+        echo "  cdp		build cdp/cadcCDP"
+        echo "  cdpsrv		build cdp/cadcCDP-Server"
+        echo "  vossrv		build vos/cadcVOS-Server"
+	} 
+
+# if less than one argument supplied, display usage 
+	if [  $# -lt 1 ] 
+	then 
+		display_usage
+		exit -1
+	fi 
+
+# check that CADC_PREFIX env var is set
+if [ X$CADC_PREFIX == X ] 
+    then
+        echo "CADC_PREFIX not set! Fix it."
+        exit -1
+fi
+
+function component_build {
+    
+    target_list=("$@")
+    echo "Target list = ${target_list[@]}"
+    for i in ${target_list[@]}; do
+        echo "####################"
+        echo "Compiling $i"
+        cd ${CADC_PREFIX}/../${i}
+        ant
+        if [ $? == 0 ]; then  echo "$i build ok"; else  exit -1; fi
+
+    done
+
+}
+
+
+argument=$1
+
+all_target_list=("core/cadcUtil" "core/cadcLog" "core/cadcVOSI" "uws/cadcUWS" "uws/cadcUWS-Server" "uws/cadcTestUWS" "reg/cadcRegistry" "cdp/cadcCDP" "cdp/cadcCDP-Server" "ac/cadcAccessControl" "ac/cadcAccessControl-Server" "ac/cadcAccessControl-Admin" "ac/cadcTomcat" "vos/cadcVOS" "vos/cadcVOS-Server" "vos/cadcTestVOS" "apps/cadcDownloadManager" "apps/cadcUploadManager" "web/cadcVOTV")
+
+#all_target_list=("core/cadcUtil" "core/cadcLog" "core/cadcVOSI" "core/cadcTestServlet" "uws/cadcUWS" "uws/cadcUWS-Server" "uws/cadcTestUWS" "uws/example-uws" "reg/cadcRegistry" "cdp/cadcCDP" "cdp/cadcCDP-Server" "ac/cadcAccessControl" "ac/cadcAccessControl-Server" "ac/cadcAccessControl-Admin" "ac/cadcTomcat" "dal/cadcDALI" "sia/cadcSIA" "tap/cadcTAP" "tap/cadcTestTAP" "tap/example-tap" "vos/cadcVOS" "vos/cadcVOS-Server" "vos/cadcTestVOS" "apps/cadcDownloadManager" "apps/cadcUploadManager" "web/cadcVOTV")
+
+util_target_list=("core/cadcUtil")
+log_target_list=("core/cadcUtil" "core/cadcLog")
+ac_target_list=("core/cadcUtil" "reg/cadcRegistry" "ac/cadcAccessControl")
+acsrv_target_list=("core/cadcUtil" "core/cadcLog" "reg/cadcRegistry" "uws/cadcUWS" "uws/cadcUWS-Server" "ac/cadcAccessControl" "ac/cadcAccessControl-Server")
+acadm_target_list=("core/cadcUtil" "core/cadcLog" "reg/cadcRegistry" "uws/cadcUWS" "uws/cadcUWS-Server" "ac/cadcAccessControl" "ac/cadcAccessControl-Server" "ac/cadcAccessControl-Admin")
+reg_target_list=("core/cadcUtil" "reg/cadcRegistry")
+tom_target_list=("core/cadcUtil" "ac/cadcTomcat")
+uws_target_list=("core/cadcUtil" "uws/cadcUWS")
+uwssrv_target_list=("core/cadcUtil" "core/cadcLog" "uws/cadcUWS" "uws/cadcUWS-Server")
+cdp_target_list=("core/cadcUtil" "core/cadcLog" "reg/cadcRegistry" "cdp/cadcCDP")
+cdpsrv_target_list=("core/cadcUtil" "core/cadcLog" "reg/cadcRegistry" "cdp/cadcCDP-Server")
+vossrv_target_list=("core/cadcUtil" "core/cadcLog" "reg/cadcRegistry" "uws/cadcUWS" "uws/cadcUWS-Server" "reg/cadcRegistry" "cdp/cadcCDP" "ac/cadcAccessControl" "vos/cadcVOS" "vos/cadcVOS-Server")
+
+case ${argument} in
+
+    all )
+        component_build "${all_target_list[@]}"
+        ;;
+    util )
+        component_build "${util_target_list[@]}" 
+        ;;
+    log )
+        component_build "${log_target_list[@]}" 
+        ;;
+    ac )
+        component_build "${ac_target_list[@]}"
+        ;;
+    acsrv )
+        component_build "${acsrv_target_list[@]}"
+        ;;
+    acadm )
+        component_build "${acadm_target_list[@]}"
+        ;;
+    reg )
+        component_build "${reg_target_list[@]}"
+        ;;
+    tom )
+        component_build "${tom_target_list[@]}"
+        ;;
+    uws )
+        component_build "${uws_target_list[@]}"
+        ;;
+    uwssrv )
+        component_build "${uwssrv_target_list[@]}"
+        ;;
+    cdp )
+        component_build "${cdp_target_list[@]}"
+        ;;
+    cdpsrv )
+        component_build "${cdpsrv_target_list[@]}"
+        ;;
+    vossrv )
+        component_build "${vossrv_target_list[@]}"
+        ;;
+    * )
+        echo "No useful argument provided"
+        exit -1 
+        ;;
+esac
+</screen>
+	</para>
+</appendix>
+
