@@ -113,11 +113,11 @@ In both cases a deployment descriptor file (web.xml) is needed. An example of a 
       &lt;servlet-class&gt;ca.nrc.cadc.ac.server.web.UserServlet&lt;/servlet-class&gt;
         &lt;init-param&gt;
           &lt;param-name&gt;ca.nrc.cadc.ac.server.web.UserServlet.NotAugmentedX500Principals&lt;/param-name&gt;
-          &lt;param-value&gt;cn=servops_4a2,ou=cadc,o=hia,c=ca cn=canfarops_586,ou=cadc,o=hia,c=ca&lt;/param-value&gt;
+          &lt;param-value&gt;a_user_dn&lt;/param-value&gt;
         &lt;/init-param&gt;
         &lt;init-param&gt;
           &lt;param-name&gt;ca.nrc.cadc.ac.server.web.UserServlet.NotAugmentedHttpPrincipals&lt;/param-name&gt;
-          &lt;param-value&gt;servops canfarops&lt;/param-value&gt;
+          &lt;param-value&gt;srvops dataops&lt;/param-value&gt;
         &lt;/init-param&gt;
       &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
     &lt;/servlet&gt;
