@@ -17,7 +17,7 @@ This chapter explains hot to configure tomcat web server to support SSL using AP
     <title>Install and configure APR and SSL support</title>
 
 <para>
-* Install apr native support
+Install apr native support
 </para>
 <screen>
 yum install openssl-devel
@@ -97,12 +97,16 @@ cat myCAServerIntermediateCert.pem myCARootCert.pem &gt; CAfile.pem
 cp CAfile.pem /opt/tomcat/conf/tls/CA.pem
 </screen>
 <para>
-Configure the tomcat connector in <command>${TOMCAT_HOME}/conf/server.xml</command>
+Configure the tomcat connectors in <command>${TOMCAT_HOME}/conf/server.xml</command>
 </para>
 <screen>
+&lt;Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+           maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+           sslProtocol="TLS" />
+
 &lt;Connector port="80" protocol="HTTP/1.1"
-                 connectionTimeout="20000"
-                 redirectPort="443" /&gt;
+           connectionTimeout="20000"
+           redirectPort="443" /&gt;
 
 &lt;Connector port="443" protocol="org.apache.coyote.http11.Http11AprProtocol"
           maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
