@@ -14,7 +14,7 @@ pot   		directory containing pot files used to obtain french version
 ** Install publican. 
 
 $ yum install publican publican-doc publican-brand
-Replace brand with a known brand, for example, redhat, fedora, jboss, ovirt, or gimp
+Replace brand with a known brand, for example, redhat, fedora, jboss, ovirt, or gimp.
 
 
 ** Clone the repository.
