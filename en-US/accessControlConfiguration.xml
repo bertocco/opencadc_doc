@@ -34,7 +34,7 @@ Care must be taken in configuring the same server host and proxyuser in both <co
       </para>
  </warning> 
  <note><para>
-Other copies of similar files are present in the girhub repository. Not all these files have to be configured. The files:
+Other copies of similar files are present in the github repository. Not all these files have to be configured. The files:
  <screen>
 ${CADC_PREFIX}/../ac/cadcAccessControl-Server/test/config/testConfig1.properties
 ${CADC_PREFIX}/../ac/cadcAccessControl-Server/test/config/testConfig2.properties
@@ -312,7 +312,7 @@ ant test
 
 <warning>
 <para>
-Is is strongly suggested to run each tests starting from a clean point, i.e. to run an <command>`ant clean`</command> before each test. So, the right stepa are: `ant clean`, build the single component, `ant test`. A prototype of a script to build the single components (supposing the configuration described in this guide, is added in appendix of this documentation.
+Is is strongly suggested to run each test starting from a clean point, i.e. to run an <command>`ant clean`</command> before each test. So, the right steps are: `ant clean`, build the single component, `ant test`. A prototype of a script to build the single component (supposing the configuration described in this guide) is added in appendix of this documentation.
 </para>
 </warning>
 

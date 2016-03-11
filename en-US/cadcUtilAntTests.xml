@@ -90,10 +90,10 @@ ant build
 		<title><command>ant test</command> usage</title>
 	
                <para>
-                        To run the test target (<command>ant test</command>) it is needed a proxy file placed in <command>${CADC_PREFIX}/etc/proxy.pem</command>. This proxy file can be created starting from the user identity certificate (released by a Certification Authority) in <command>.pem</command> format or staring from <command>user_cert.pem</command> and <command>user_key.pem</command> files joined in one unique file doing:
+                        To run the test target (<command>ant test</command>) it is needed a proxy file placed in <command>${CADC_PREFIX}/etc/proxy.pem</command>. This proxy file can be created starting from the user identity certificate (released by a Certification Authority) in <command>.pem</command> format or staring from <command>user_cert.pem</command> and <command>user_key.pem</command> files joined in one unique file (strictly respecting the order key for first and cert for second) doing:
                 </para>
 <screen>
-cat mykey.key mycert.pem > mycert_and_key.pem
+cat mykey.key mycert.pem > key_and_cert.pem
 </screen>
 <para>Certificate and key must not contain bag attributes and key must be no password protected. If needed the password can be removed doing:
 </para>
@@ -105,7 +105,7 @@ $> mv mykey.key.new mykey.key
 </screen>
 <para>At this point, the proxy.pem file can be generated issuing:</para>
 <screen>
-${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/mycert_and_key.pem &lt;days of validity number&gt; ${CADC_PREFIX}/etc/proxy
+${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/key_and_cert.pem &lt;days of validity number&gt; ${CADC_PREFIX}/etc/proxy
 </screen>
 <para>Now ant tests can be run:</para>
 <screen>

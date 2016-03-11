@@ -20,7 +20,7 @@ Below are listed the ingredients needed to use the command line utilities to man
 <orderedlist>
 
 <listitem>
-<para> User certificate for authentication: mycert.crt, mykey.key</para>
+<para> x509 user certificate released by a trusted Certification Authority for authentication: mycert.crt, mykey.key</para>
 </listitem>
 
 <listitem>
@@ -28,7 +28,7 @@ Below are listed the ingredients needed to use the command line utilities to man
 <screen>
 cat mykey.key mycert.pem > key_and_cert.pem
 </screen>
-<para>Certificate and key must not contain bag attributes and key must be no password protected. If needed the password can be removed doing:</para>
+<para>Certificate and key must not contain bag attributes and key must be no password protected. If needed, the password can be removed doing:</para>
 <screen>
 openssl rsa -in mykey.pem -out mykey.pem.new
 Enter pass phrase for mykey.pem: ****************
@@ -37,7 +37,7 @@ $> mv mykey.pem.new mykey.pem
 </screen>
 <para>The proxy.pem file can be generated:</para>
 <screen>
-${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/mycert_and_key.pem &lt;days of validity number&gt; ${CADC_PREFIX}/etc
+${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/mycert_and_key.pem &lt;days of validity number&gt; ${CADC_PREFIX}/etc/proxy
 </screen>
 <para>as already explained in "ant test usage"</para>
 </listitem>
@@ -50,7 +50,7 @@ ${CADC_PREFIX}/cadcUtil/scripts/createProxyCert /root/certs/mycert_and_key.pem &
 </listitem>
 
 <listitem>
-<para>The xml description of the users to register. As an example:</para>
+<para>The xml description of the users to register. Example:</para>
 <screen>
 $ cat ~/tests/myUser.xml 
 &lt;xml version="1.0" encoding="UTF-8"?&gt;
@@ -78,7 +78,7 @@ $ cat ~/tests/myUser.xml
 </listitem>
 
 <listitem>
-<para>The certificate subject of the user to register. As an example:</para>
+<para>The certificate subject of the user to register. Example:</para>
 <screen>
 subject=/DC=org/DC=terena/DC=tcs/C=IT/O=INAF/CN=Test User test.user@mydomain.org
 </screen>
@@ -131,12 +131,12 @@ unboundid-ldapsdk-se.jar
 <screen>
 curl -v  -T newUser.xml "http://&lt;yourserver&gt;:8080/ac/users"
 </screen>
-<para>A new user registration request can be performed with authentication:</para>
+<para>A new user registration request can be performed with authentication also:</para>
 <screen>
 curl -v -T newUser.xml  --cert ./key_and_cert.pem --cacert /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem  "https://&lt;yourserver&gt;/ac/users"
 </screen>
 <para>Where ingredients are which already described at the beginning of the chapter.</para>
-<para>It can be verifyed that the user appears in 389-DS in the usersRequest group</para>
+<para>It can be verified that the user appears in 389-DS in the UserRequests group</para>
  
 </section>
 
@@ -144,7 +144,7 @@ curl -v -T newUser.xml  --cert ./key_and_cert.pem --cacert /etc/pki/ca-trust/ext
 <section  id='user_approve_reject'><title>New user approval or rejection</title>
 
 <para>The new user registration request can be approved or rejected only by authenticated users. The user is authenticated through its certificate. The certificate can be provided to the system in two ways:</para>
-<para>copying the proxy.pem file in ~/.ssl/cadcproxy.pem</para>
+<para>copying the proxy.pem file in ~/.ssl/cadcproxy.pem, where ~ is the home of the user performing the task</para>
 <para><command>or</command></para>
 <para>by command line using the "--cert" option</para>
 
@@ -160,10 +160,10 @@ java ca.nrc.cadc.ac.admin.Main --reject=testuser --dn=CN="Test User test.user@my
 Adding a <command>-d</command> option at the end of the command, a debug output can be obtained.
 </para>
 <para>
-If the user is approved, in 389-DS can be checket that the user has been movet fron UserRequests group to User group.
+If the user is approved, in 389-DS can be checked that the user has been moved from UserRequests group to Users group.
 </para>
 <para>
-If the user is rejected, in 389-DS can be checket that iit disappear fron UserRequests.
+If the user is rejected, in 389-DS can be checked that it disappear from UserRequests.
 </para>
 </section>
 
@@ -205,7 +205,7 @@ jdom2.jar
 xerces.jar
 </screen>
 <para>
-Group management operations can be performed only by authenticated users. The operationg user is authenticated through its certificate. The certificate can be provided to the system in two ways:</para>
+Group management operations can be performed only by authenticated users. The operating user is authenticated through its certificate. The certificate can be provided to the system in two ways:</para>
 <para>
 copying the proxy.pem file in ~/.ssl/cadcproxy.pem
 </para>
@@ -222,7 +222,7 @@ by command line using the <command>--cert</command> option.
 java  ca.nrc.cadc.ac.client.GMSClientMain --create --group=NewTestGroup --cert=proxy.pem -d
 </screen>
 <para>
-Adding a <command>-d</command> option at the end of the command, a debug output can be obtained.
+Adding a <command>-d</command> option at the end of the command, a debug output is obtained.
 </para>
 <para>
 In 389-DS Groups the new group appears and the user that created the group is the group owner.
@@ -244,7 +244,7 @@ java  ca.nrc.cadc.ac.client.GMSClientMain --remove-member --group=NewTestGroup -
 
 <section id='add_group_member'><title>Add a group member</title>
 
-<para>An existing and approved user can be added as member of a group.Example:</para>
+<para>An existing and approved user can be added as member of a group. Example:</para>
 <screen>
 java  ca.nrc.cadc.ac.client.GMSClientMain --add-member --group=NewTestGroup --userid=testuser --cert=proxy.pem -d
 </screen>
@@ -266,9 +266,9 @@ java  ca.nrc.cadc.ac.client.GMSClientMain --get --group=Paperopoli --userid=silv
 java  ca.nrc.cadc.ac.client.GMSClientMain --delete --group=Disneyland  --cert=../../core/etc/proxy.pem -d
 </screen>
 <para>
-When a group is removed, it is not deleted by 389-DS, but only marked as as inactive
-(nsAccountLock=true). The reason to chose to do deletions this way is to
-avoid inconsistencies. As an example: a situation where:
+When a group is removed, it is not deleted by 389-DS, but only marked as inactive
+(nsAccountLock=true). The reason to choose to do group deletions this way, is to
+avoid inconsistencies. Example: a situation where:
 </para>
 <para>
 person A creates groupA and (in some other service like vospace) grants

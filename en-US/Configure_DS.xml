@@ -10,7 +10,18 @@
    </para>
    <para>
 Reference documentation:
-     <ulink url="http://directory.fedoraproject.org/docs/389ds/howto/howto-ssl.html">Configuring TLS/SSL Enabled 389 Directory Server</ulink> and specifically <ulink url="http://directory.fedoraproject.org/docs/389ds/howto/howto-ssl.html#importing-an-existing-self-sign-keycert-or-3rd-party-cacert">Importing an Existing Self Sign Key/Cert or 3rd Party Ca/Cert</ulink> and <ulink url="http://directory.fedoraproject.org/docs/389ds/howto/howto-ssl.html#preparing-pinpassword-files-for-the-certificate-databases">Preparing PIN/password files for the certificate databases</ulink>.
+   </para>
+   <para>
+     <ulink url="http://directory.fedoraproject.org/docs/389ds/howto/howto-ssl.html">Configuring TLS/SSL Enabled 389 Directory Server</ulink> 
+   </para>
+   <para>
+and specifically    </para>
+   <para>
+<ulink url="http://directory.fedoraproject.org/docs/389ds/howto/howto-ssl.html#importing-an-existing-self-sign-keycert-or-3rd-party-cacert">Importing an Existing Self Sign Key/Cert or 3rd Party Ca/Cert</ulink>    </para>
+   <para>
+and    </para>
+   <para>
+<ulink url="http://directory.fedoraproject.org/docs/389ds/howto/howto-ssl.html#preparing-pinpassword-files-for-the-certificate-databases">Preparing PIN/password files for the certificate databases</ulink>.
    </para>
 
 <section id="sect-Documentation-AC_UsersGuide-ConfigureDS_Section_1">
@@ -174,11 +185,13 @@ User ID: cn=Directory Manager
 Password: ********
 Administration URL: https://youradminserver.yourdomain:9830
     </screen>
+<para>
 <mediaobject>
 <imageobject>
   <imagedata fileref="./images/enter_389ds_as_manager.png" />
 </imageobject>
 </mediaobject>
+</para>
 
   </listitem>
   <listitem>
