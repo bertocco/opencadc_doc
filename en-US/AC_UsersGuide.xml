@@ -20,7 +20,7 @@
 <!--
 	<xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 -->
-	<xi:include href="web.xml.appendix.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="webdescriptor.appendix.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="build_script.appendix.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<index />
 </book>
